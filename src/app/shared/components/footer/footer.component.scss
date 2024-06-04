@@ -1,0 +1,14 @@
+@import '/src/styles.scss';
+
+.footer_style {
+    background: #141218;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 0;
+
+    strong {
+        color: #2B92F0;
+    }
+}
