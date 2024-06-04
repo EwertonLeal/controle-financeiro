@@ -1,0 +1,41 @@
+.form-login_wrapper {
+    display: flex;
+    align-items: center;
+
+    figure {
+        margin: 0;
+        flex: 1 1 30%;
+        text-align: center;
+    }
+
+    form {
+        flex: 1 1 40%;
+
+        h2 {
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .mat-form-field {
+            width: 100%;
+        }
+
+        button {
+            color: #ffffff;
+            background-color: #2B92F0;
+            padding: 6px;
+            width: 100%;
+        }
+    }
+}
+
+.form-login_wrapper + p {
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 0;
+
+    strong {
+        color: #2B92F0;
+        cursor: pointer;
+    }
+}
