@@ -3,14 +3,19 @@ import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
+    path: 'auth',
+    loadChildren: () => import('./autenticacao/autenticacao.module').then(m => m.AutenticacaoModule)
+  },
+  {
     path: '',
-    redirectTo: 'login',
+    redirectTo: 'auth/login',
     pathMatch: 'full'
   },
   {
-    path: 'auth',
-    loadChildren: () => import('./autenticacao/autenticacao.module').then(m => m.AutenticacaoModule)
-  }
+    path: '**',
+    redirectTo: 'pagina-nao-encontrada',
+    pathMatch: 'full'
+  },
 ];
 
 @NgModule({

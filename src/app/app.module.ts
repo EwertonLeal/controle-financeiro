@@ -7,6 +7,7 @@ import { AppComponent } from './app.component';
 import { FooterComponent } from './shared/components/footer/footer.component';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ErroModule } from './core/erro/erro.module';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
+    ErroModule,
     NgbModule
   ],
   providers: [],

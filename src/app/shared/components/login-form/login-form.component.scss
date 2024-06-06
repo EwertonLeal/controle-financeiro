@@ -12,7 +12,7 @@
         flex: 1 1 40%;
 
         h2 {
-            margin-bottom: 20px;
+            margin-bottom: 16px;
             font-weight: 600;
         }
 
@@ -31,11 +31,18 @@
 
 .form-login_wrapper + p {
     text-align: center;
-    margin-top: 30px;
+    margin-top: 25px;
     margin-bottom: 0;
 
     strong {
         color: #2B92F0;
         cursor: pointer;
+    }
+}
+
+::ng-deep {
+    .form-login_wrapper .mat-form-field-wrapper {
+        margin: 0 !important;
+        padding-bottom: 18px !important;
     }
 }

@@ -1,0 +1,14 @@
+@import '/src/styles.scss';
+
+p {
+    strong {
+        color: #2B92F0;
+        cursor: pointer;
+    }
+}
+
+main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
