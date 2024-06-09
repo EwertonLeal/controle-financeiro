@@ -15,7 +15,7 @@ $controle-financeiro-theme: mat.define-light-theme((
 ));
 
 @include mat.all-component-themes($controle-financeiro-theme);
-
+@import '~bootstrap/scss/bootstrap';
 @import '~bootstrap/scss/bootstrap';
 
 html, body { height: 100%; }
@@ -30,6 +30,14 @@ p {
   margin: 0;
 }
 
-main {
-  height: 58.4vh;
+ul {
+  margin: 0;
 }
+
+main {
+  height: 80%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+

@@ -1,0 +1,147 @@
+.homepage_container {
+    height: calc(100% - 60px);
+    display: block;
+    background-color: #F6F6F6;
+    overflow-y: scroll;
+}
+
+.nav_container {
+    background: #fff;
+    padding: 10px;
+    border-radius: 30px;
+    box-shadow: 0px 0px 3px 0 rgba(0, 0, 0, 0.3019607843);
+
+}
+
+.demonstrativo {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 10px;
+
+    div {
+        height: 175px;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        border-radius: 6px;
+        box-shadow: 0px 0px 3px 0 rgba(0, 0, 0, 0.3019607843);
+        padding: 20px;
+        
+        h2,h3 {
+            font-weight: 600;
+        }
+    }
+
+    .item1 {
+        grid-column: 1; /* Ocupa a primeira coluna */
+        grid-row: 1; /* Ocupa a primeira linha */
+        background-image: url('../../../assets/images/entrada.png');
+        color: #0E5422;
+    }
+    
+    .item2 {
+        grid-column: 2; /* Ocupa a segunda coluna */
+        grid-row: 1; /* Ocupa a primeira linha */
+        background-image: url('../../../assets/images/saídas.png');
+        color: #540E0E;
+    }
+    
+    .item3 {
+        grid-column: 1 / span 2; /* Ocupa ambas as colunas */
+        grid-row: 2; /* Ocupa a segunda linha */
+        background-image: url('../../../assets/images/saldo.png');
+        color: #383005;
+    }
+}
+    
+.p20 {
+    padding: 20px;
+}
+
+button {
+    padding: 0 15px;
+    background-color: #F6F6F6;
+    color: #1a1a1a;
+    font-weight: 500;
+    border: none;
+    border-radius: 30px;
+    transition: .3s;
+    outline: none;
+    min-width: 80px;
+    height: 40px;
+}
+
+button:hover,
+button:focus {
+    background-color: #2B92F0;
+    color: #E1FAFF;
+}
+
+.outline {
+    border: 1px solid #2B92F0;
+    background-color: #fff;
+    color: #2B92F0;
+}
+
+::ng-deep {
+    .homepage_container {
+        .form_wrapper {
+            max-width: inherit !important;
+            width: 100% !important;
+            min-height: 250px;
+
+            .table tbody {
+                overflow-y: scroll;
+                height: 165px;
+            }
+
+            .pagination ,
+            .ngb-custom-pages-item {
+                margin: 0 !important;
+                display: flex;
+                align-items: center;
+            }
+
+            .ngb-custom-pages-item div:first-child {
+                margin: 0 !important;
+            }
+        }
+
+        .demonstrativo_container {
+            .form_wrapper {
+                padding: 0;
+                background-color: transparent;
+                box-shadow: none;
+            }
+        }
+
+        .objetivos_container {
+            .form_wrapper {
+                background-image: url('../../../assets/images/objetivos.png');
+                background-size: 100% 100%;
+                background-position: center;
+                background-repeat: no-repeat;
+                color: #052038;
+
+                h5 {
+                    margin-top: 50px;
+                    font-size: 16px;
+                    width: 45%;
+                }
+
+                button {
+                    margin-top: 20px;
+                    border: 1px solid #052038;
+                    color: #052038;
+                    background-color: transparent;
+                }
+
+                button:hover {
+                    transform: scale(1.05);
+                }
+                
+            }
+        }
+    }
+}

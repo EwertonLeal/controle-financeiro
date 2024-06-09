@@ -7,8 +7,12 @@ const routes: Routes = [
     loadChildren: () => import('./autenticacao/autenticacao.module').then(m => m.AutenticacaoModule)
   },
   {
+    path: 'pages',
+    loadChildren: () => import('./pages/pages.module').then(m => m.PagesModule)
+  },
+  {
     path: '',
-    redirectTo: 'auth/login',
+    redirectTo: 'pages/home',
     pathMatch: 'full'
   },
   {
