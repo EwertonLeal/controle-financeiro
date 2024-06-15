@@ -89,7 +89,7 @@ button:focus {
         .form_wrapper {
             max-width: inherit !important;
             width: 100% !important;
-            min-height: 250px;
+            min-height: 325px;
 
             .table tbody {
                 overflow-y: scroll;
@@ -114,6 +114,18 @@ button:focus {
                 background-color: transparent;
                 box-shadow: none;
             }
+        }
+
+        .chart_container {
+            .form_wrapper {
+                height: 250px;
+
+                canvas {
+                    width: 100% !important;
+                    height: 100% !important;
+                }
+            }
+
         }
 
         .objetivos_container {

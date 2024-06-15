@@ -5,9 +5,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FooterComponent } from './shared/components/footer/footer.component';
+import { ErroModule } from './core/erro/erro.module';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { ErroModule } from './core/erro/erro.module';
 
 @NgModule({
   declarations: [
@@ -19,7 +19,7 @@ import { ErroModule } from './core/erro/erro.module';
     BrowserAnimationsModule,
     AppRoutingModule,
     ErroModule,
-    NgbModule
+    NgbModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
