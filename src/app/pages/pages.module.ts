@@ -5,12 +5,14 @@ import { PagesRoutingModule } from './pages-routing.module';
 import { MaterialModule } from '../core/material/material.module';
 import { HomeComponent } from './home/home.component';
 import { NgbootstrapModule } from '../core/ngbootstrap/ngbootstrap.module';
+import { ObjetivosComponent } from './objetivos/objetivos.component';
 
 
 
 @NgModule({
   declarations: [
-    HomeComponent
+    HomeComponent,
+    ObjetivosComponent
   ],
   imports: [
     CommonModule,
