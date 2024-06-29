@@ -6,8 +6,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FooterComponent } from './shared/components/footer/footer.component';
 import { ErroModule } from './core/erro/erro.module';
-
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -15,11 +14,11 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     FooterComponent,
   ],
   imports: [
+    CommonModule,
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
-    ErroModule,
-    NgbModule,
+    ErroModule
   ],
   providers: [],
   bootstrap: [AppComponent]

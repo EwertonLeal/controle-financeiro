@@ -1,0 +1,48 @@
+<ng-template #content let-modal>
+	<div class="modal-header">
+		<h4 class="modal-title" id="modal-basic-title">
+			Cadastro de {{ tipoDeTransacao }}
+		</h4>
+		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+	</div>
+	<div class="modal-body">
+		<form [ngClass]="{'receita': tipoDeTransacao == 'Receita', 'despesa': tipoDeTransacao == 'Despesa'}">
+			<div class="row">
+				<!-- PREÇO -->
+				<mat-form-field appearance="fill" floatLabel="always" class="col-12">
+					<input matInput type="number" min="0.00" max="10000.00" step="0.01" class="example-right-align" value="0" placeholder="Digite o preço da despesa">
+					<span matPrefix>R$&nbsp;</span>
+				</mat-form-field>
+
+				<!-- DATA -->
+				<mat-form-field appearance="fill" class="col-12">
+					<mat-label>Selecione o dia da compra</mat-label>
+					<input matInput [matDatepicker]="dp3" disabled>
+					<mat-datepicker-toggle matSuffix [for]="dp3"></mat-datepicker-toggle>
+					<mat-datepicker #dp3 disabled="false"></mat-datepicker>
+				</mat-form-field>
+
+				<!-- DESCRIÇÃO-->
+				<mat-form-field class="col-12 mb-2" appearance="fill">
+					<mat-label>Descrição</mat-label>
+					<input matInput #message maxlength="256" placeholder="Ex. gastei no shopping tal...">
+					<mat-hint align="end">{{message.value.length}} / 256</mat-hint>
+				</mat-form-field>
+
+				<!-- TIPO DE GASTO -->
+				<mat-form-field appearance="fill" class="col-12">
+					<mat-label>Selecione o tipo de gasto</mat-label>
+					<mat-select>
+						<mat-option *ngFor="let transacao of transacoes">
+							<i [class]="transacao.icone"></i>
+							{{ transacao.nome }}
+						</mat-option>
+					  </mat-select>
+				</mat-form-field>
+			</div>
+		</form>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">CADASTRAR</button>
+	</div>
+</ng-template>

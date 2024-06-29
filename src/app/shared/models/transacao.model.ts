@@ -1,4 +1,3 @@
-import { Periodo } from "../enums/periodos.enum";
 import { TipoTransacao } from "../enums/tipo-transacao.enum";
 import { TagTransacao } from "./tag-transacao.model";
 
@@ -9,21 +8,24 @@ export interface Transacao {
     descricao: string;
     tag: TagTransacao;
     despesa_fixa: boolean;
-    recorrente: boolean;
-    quantidade: number;
-    periodo: Periodo;
 }
 
-export const tags: TagTransacao[] = [
+export const tagsReceita: TagTransacao[] = [
     { icone: 'fas fa-chart-line', nome: 'Investimentos' },
     { icone: 'fas fa-star', nome: 'Prêmios' },
     { icone: 'fas fa-gift', nome: 'Presentes' },
     { icone: 'fas fa-moeny-bill', nome: 'Salário' },
+    { icone: 'fas fa-ellipsis-h', nome: 'Outros' },
 ];
 
-export const Periodos = [
-    { value: Periodo.Dias },
-    { value: Periodo.Semanas },
-    { value: Periodo.Meses },
-    { value: Periodo.Anos }
-]
+export const tagsDespesa: TagTransacao[] = [
+    { icone: 'fas fa-utensils', nome: 'Alimentação' },
+    { icone: 'fas fa-university', nome: 'Educação' },
+    { icone: 'fas fa-umbrella-beach', nome: 'Lazer' },
+    { icone: 'fas fa-home', nome: 'Moradia' },
+    { icone: 'fas fa-receipt', nome: 'Pagamentos' },
+    { icone: 'fas fa-tshirt', nome: 'Roupa' },
+    { icone: 'fas fa-medkit', nome: 'Saúde' },
+    { icone: 'fas fa-bus-alt', nome: 'Transporte' },
+    { icone: 'fas fa-ellipsis-h', nome: 'Outros' },
+];

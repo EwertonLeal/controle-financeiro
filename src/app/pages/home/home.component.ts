@@ -1,6 +1,8 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { Chart, registerables  } from 'chart.js';
 import { BarController, BarElement, CategoryScale, LinearScale, Title, Tooltip, Legend } from 'chart.js';
+import { CadastroModalComponent } from 'src/app/shared/components/cadastro-modal/cadastro-modal.component';
+import { TipoTransacao } from 'src/app/shared/enums/tipo-transacao.enum';
 
 interface Country {
 	name: string;
@@ -45,11 +47,12 @@ const FILTER_PAG_REGEX = /[^0-9]/g;
 })
 export class HomeComponent implements OnInit, AfterViewInit {
 
+  @ViewChild('cadastroModal') cadastroModal!: CadastroModalComponent
+
   constructor() { }
 
-	countries = COUNTRIES;
-
-  page = 4;
+	public countries = COUNTRIES;
+  public page = 4;
 
 	getPageSymbol(current: number) {
 		return ['A', 'B', 'C', 'D', 'E', 'F', 'G'][current - 1];
@@ -113,6 +116,16 @@ export class HomeComponent implements OnInit, AfterViewInit {
     });
 
     return chart;
+  }
+
+  public cadastrarGastos() {
+    const tipoDeTransacao = TipoTransacao.despesa;
+    this.cadastroModal.open(tipoDeTransacao);
+  }
+
+  public cadastrarReceitas() {
+    const tipoDeTransacao = TipoTransacao.receita;
+    this.cadastroModal.open(tipoDeTransacao);
   }
 
 }

@@ -1,14 +1,18 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgbModule, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 
 @NgModule({
   declarations: [],
-  imports: [],
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+  ],
   exports: [
-    NgbPaginationModule
+    NgbModule,
+    NgbPaginationModule,
   ]
 })
 export class NgbootstrapModule { }
