@@ -8,6 +8,7 @@ import { FooterComponentComponent } from './shared/footer-component/footer-compo
 import { LoginComponent } from './pages/login/login.component';
 import { SignUpComponent } from './pages/sign-up/sign-up.component';
 import { BannerComponent } from './shared/banner/banner.component';
+import { MaterialModule } from './shared/material/material.module';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { BannerComponent } from './shared/banner/banner.component';
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    RouterModule
+    RouterModule,
+    MaterialModule
   ],
   providers: [],
   bootstrap: [AppComponent]
