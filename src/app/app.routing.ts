@@ -7,6 +7,10 @@ const routes: Routes = [
     loadChildren: () => import('./pages/login/login.module').then(l => l.LoginModule)
   },
   {
+    path: 'cadastro',
+    loadChildren: () => import('./pages/sign-up/sign-up.module').then(s => s.SignUpModule)
+  },
+  {
     path: '',
     redirectTo: 'login',
     pathMatch: 'full'

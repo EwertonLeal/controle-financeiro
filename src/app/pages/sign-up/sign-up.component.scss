@@ -1,0 +1,87 @@
+.signUp_container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: calc(100vh - 150px);
+}
+
+.signUp_form-wraper {
+    min-width: 600px;
+    padding: 20px;
+    border-radius: 6px;
+    box-sizing: border-box;
+    box-shadow: 0 1px 2px 0 #0000004d;
+
+
+    display: grid;
+    grid-template:
+    "signUp_title signUp_title"
+    "form_container form_container"
+    "signUp_cta signUp_cta"
+    ;
+}
+
+.signUp_title {
+    grid-area: signUp_title;
+    text-align: center;
+    font-weight: 600;
+}
+
+.form_container {
+    grid-area: form_container;
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-gap: 1rem;
+
+    display: grid;
+    grid-template: 
+    "name_field name_field"
+    "password_field confirm_password_field"
+    "btn_create btn_create";
+
+    button {
+        background-color: #2B92F0;
+        color: #ffffff;
+        border: none;
+        outline: none;
+        padding: 1rem;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: .3s;
+    }
+
+    button:hover {
+        background-color: #1f7cd3;
+        transform: scale(1.02);
+    }
+}
+
+.name_field {
+    grid-area: name_field;
+}
+
+.btn_create {
+    grid-area: btn_create;
+}
+
+.signUp_cta {
+    grid-area: signUp_cta;
+    margin: 1.5rem;
+    text-align: center;
+
+    a {
+        color: #2B92F0;
+        font-weight: 500;
+        cursor: pointer;
+    }
+
+    a:hover {
+        color: #1f7cd3;
+    }
+}
+
+::ng-deep {
+    .mat-mdc-form-field-subscript-wrapper {
+        display: none !important;
+    }
+}

@@ -5,7 +5,7 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { FooterComponentComponent } from './shared/footer-component/footer-component.component';
-import { AppRoutingModule } from './app-routing';
+import { AppRoutingModule } from './app.routing';
 
 @NgModule({
   declarations: [

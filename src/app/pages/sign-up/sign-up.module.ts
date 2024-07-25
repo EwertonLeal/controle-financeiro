@@ -1,20 +1,20 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LoginRoutingRoutingModule } from './login.routing';
-import { LoginComponent } from './login.component';
+import { SignUpRoutingModule } from './signup.routing';
+import { SignUpComponent } from './sign-up.component';
 import { MaterialModule } from 'src/app/shared/material/material.module';
 import { SharedModule } from 'src/app/shared/shared.module';
 
 
 @NgModule({
   declarations: [
-    LoginComponent,
+    SignUpComponent
   ],
   imports: [
     CommonModule,
-    LoginRoutingRoutingModule,
+    SignUpRoutingModule,
     MaterialModule,
     SharedModule
   ]
 })
-export class LoginModule { }
+export class SignUpModule { }

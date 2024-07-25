@@ -1,1 +1,31 @@
-<p>sign-up works!</p>
+<banner 
+  [imageSrc]="'../../../assets/images/banner 2.jpg'"
+  [imageAlt]="'Banner 01'"
+></banner>
+
+<section class="signUp_container">
+  <section class="signUp_form-wraper">
+    <h2 class="signUp_title">CRIE SUA CONTA</h2>
+
+    <form class="form_container">
+        <mat-form-field appearance="outline" class="name_field">
+          <mat-label>Nome</mat-label>
+          <input matInput type="email" placeholder="Digite seu e-mail">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="password_field">
+          <mat-label>Senha</mat-label>
+          <input matInput type="password" placeholder="Digite sua senha">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="confirm_password_field">
+          <mat-label>Confirme sua senha</mat-label>
+          <input matInput type="password" placeholder="Digite sua senha">
+        </mat-form-field>
+
+        <button class="btn_create">CRIE SUA CONTA</button>
+    </form>
+
+    <p class="signUp_cta">Já possui uma conta ? <a routerLink="/login">Faça login</a></p>
+  </section>
+</section>
