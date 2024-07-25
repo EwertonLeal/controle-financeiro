@@ -1,0 +1,93 @@
+.home_container {
+    display: grid;
+    grid-gap: 20px;
+    grid-template:
+    "lista_saidas lista_valores"
+    "grafico_gastos lista_valores"
+}
+
+.lista_saidas {
+    grid-area: lista_saidas;
+    height: 340px;
+    background-color: #fff;
+    padding: 20px;
+    box-sizing: border-box;
+    box-shadow: 0 1px 2px 0 #0000004d;
+}
+
+.grafico_gastos {
+    grid-area: grafico_gastos;
+    height: 340px;
+    background-color: #fff;
+    padding: 20px;
+    box-sizing: border-box;
+    box-shadow: 0 1px 2px 0 #0000004d;
+}
+
+.lista_valores {
+    grid-area: lista_valores;
+    display: grid;
+    grid-gap: 20px;
+    grid-template: 
+    "lista_valores_entrada lista_valores_saida"
+    "lista_valores_saldo lista_valores_saldo"
+    "lista_valores_objetivos lista_valores_objetivos"
+    ;
+    
+    &_entrada {
+        grid-area: lista_valores_entrada;
+        background-image: url("../../../assets/images/entrada.png");
+        background-size: 370px 190px;
+        background-position: center;
+        background-repeat: no-repeat;
+        height: 160px;
+        padding: 20px;
+        box-sizing: border-box;
+        box-shadow: 0 1px 2px 0 #0000004d;
+    }
+
+    &_saida {
+        grid-area: lista_valores_saida;
+        background-image: url("../../../assets/images/saídas.png");
+        background-size: 370px 190px;
+        background-position: center;
+        background-repeat: no-repeat;
+        height: 160px;
+        padding: 20px;
+        box-sizing: border-box;
+        box-shadow: 0 1px 2px 0 #0000004d;
+    }
+
+    &_saldo {
+        grid-area: lista_valores_saldo;
+        background-image: url("../../../assets/images/saldo.png");
+        background-size: 800px 190px;
+        background-position: center;
+        background-repeat: no-repeat;
+        height: 160px;
+        padding: 20px;
+        box-sizing: border-box;
+        box-shadow: 0 1px 2px 0 #0000004d;
+    }
+
+    &_objetivos {
+        grid-area: lista_valores_objetivos;
+        background-image: url("../../../assets/images/objetivos.png");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        height: 340px;
+        padding: 20px;
+        box-sizing: border-box;
+        box-shadow: 0 1px 2px 0 #0000004d;
+    }
+}
+
+::ng-deep {
+    main {
+        background-color: #FAFCFF;
+        padding: 20px;
+        overflow-y: scroll;
+        height: calc(100vh - 177px) !important;
+    }
+}
