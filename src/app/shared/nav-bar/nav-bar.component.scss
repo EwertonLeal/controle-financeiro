@@ -1,0 +1,32 @@
+.navBar {
+    position: absolute;
+    margin: 20px;
+    width: 40%;
+    background-color: #ffffff;
+    padding: .5rem;
+    border-radius: 30px;
+
+    display: flex;
+    gap: 1rem;
+
+    box-sizing: border-box;
+    box-shadow: 0 1px 2px 0 #0000004d;
+}
+
+button {
+    background-color: #F6F6F6;
+    color: #1a1a1a;
+    border: none;
+    outline: none;
+    padding: .5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: .3s;
+    border-radius: 30px;
+}
+
+button:hover, button.active {
+    background-color: #1f7cd3;
+    color: #ffffff;
+    transform: scale(1.02);
+}
