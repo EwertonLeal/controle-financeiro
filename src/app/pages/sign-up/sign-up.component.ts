@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, Validators } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
@@ -24,8 +24,17 @@ export class SignUpComponent implements OnInit {
     this.signUpForm = this.fb.group({
       nameFormControl: ['', [Validators.required]],
       passwordFormControl: ['', [Validators.required]],
-      confirmPasswordFormControl: ['', [Validators.required]]
+      confirmPasswordFormControl: ['', [Validators.required, this.matchPasswordValidator.bind(this)]]
     });
+  }
+
+  matchPasswordValidator(control: AbstractControl) {
+    if (!this.signUpForm) {
+      return null;
+    }
+    const password = this.signUpForm.get('passwordFormControl')?.value;
+    const confirmPassword = control.value;
+    return password === confirmPassword ? null : { mismatch: true };
   }
 
 }

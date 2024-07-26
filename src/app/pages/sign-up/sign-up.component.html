@@ -33,6 +33,10 @@
           <mat-error *ngIf="signUpForm.get('confirmPasswordFormControl')?.hasError('required')">
             Campo obrigatório
           </mat-error>
+
+          <mat-error *ngIf="!signUpForm.get('confirmPasswordFormControl')?.hasError('required') && signUpForm.get('confirmPasswordFormControl')?.errors?.['mismatch']">
+            As senhas não conferem
+          </mat-error>
         </mat-form-field>
 
         <button class="btn_create">CRIE SUA CONTA</button>
