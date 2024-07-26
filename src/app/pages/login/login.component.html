@@ -11,16 +11,26 @@
       <img src="../../../assets/images/porquinho.png" alt="imagem de um porco de porcelana">
     </div>
 
-    <form class="form_container">
-        <mat-form-field appearance="outline">
-          <mat-label>Login</mat-label>
-          <input matInput type="email" placeholder="Digite seu e-mail">
-        </mat-form-field>
+    <form class="form_container" [formGroup]="loginForm">
+      <mat-form-field appearance="outline">
+        <mat-label>Login</mat-label>
+        <input type="email" matInput formControlName="emailFormControl" [errorStateMatcher]="matcher"
+               placeholder="Ex. pat@example.com">
+        <mat-error *ngIf="loginForm.get('emailFormControl')?.hasError('email') && !loginForm.get('emailFormControl')?.hasError('required')">
+          Digite um e-mail válidos!
+        </mat-error>
+        <mat-error *ngIf="loginForm.get('emailFormControl')?.hasError('required')">
+          Email é <strong>obrigatorio</strong>
+        </mat-error>
+      </mat-form-field>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Senha</mat-label>
-          <input matInput type="password" placeholder="Digite sua senha">
-        </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Senha</mat-label>
+        <input type="password" matInput formControlName="passwordFormControl" [errorStateMatcher]="matcher">
+        <mat-error *ngIf="loginForm.get('passwordFormControl')?.hasError('required')">
+          Senha é <strong>obrigatorio</strong>
+        </mat-error>
+      </mat-form-field>
 
         <button>ACESSAR MINHA CONTA</button>
     </form>

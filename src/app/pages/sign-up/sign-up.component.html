@@ -7,20 +7,32 @@
   <section class="signUp_form-wraper">
     <h2 class="signUp_title">CRIE SUA CONTA</h2>
 
-    <form class="form_container">
+    <form class="form_container" [formGroup]="signUpForm">
         <mat-form-field appearance="outline" class="name_field">
           <mat-label>Nome</mat-label>
-          <input matInput type="email" placeholder="Digite seu e-mail">
+          <input matInput type="text" placeholder="Digite seu nome" formControlName="nameFormControl" [errorStateMatcher]="matcher">
+          
+          <mat-error *ngIf="signUpForm.get('nameFormControl')?.hasError('required')">
+            Campo obrigatório
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="password_field">
           <mat-label>Senha</mat-label>
-          <input matInput type="password" placeholder="Digite sua senha">
+          <input matInput type="password" placeholder="Digite sua senha" formControlName="passwordFormControl" [errorStateMatcher]="matcher">
+
+          <mat-error *ngIf="signUpForm.get('passwordFormControl')?.hasError('required')">
+            Campo obrigatório
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="confirm_password_field">
           <mat-label>Confirme sua senha</mat-label>
-          <input matInput type="password" placeholder="Digite sua senha">
+          <input matInput type="password" placeholder="Digite sua senha" formControlName="confirmPasswordFormControl" [errorStateMatcher]="matcher">
+
+          <mat-error *ngIf="signUpForm.get('confirmPasswordFormControl')?.hasError('required')">
+            Campo obrigatório
+          </mat-error>
         </mat-form-field>
 
         <button class="btn_create">CRIE SUA CONTA</button>
