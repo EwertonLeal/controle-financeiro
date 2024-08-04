@@ -1,5 +1,11 @@
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
 .navBar {
-    margin: 20px;
+    margin: 20px 0;
     width: 40%;
     background-color: #ffffff;
     padding: .5rem;
@@ -22,6 +28,12 @@ button {
     cursor: pointer;
     transition: .3s;
     border-radius: 30px;
+}
+
+.button_outline {
+    background-color: #ffffff;
+    color: #1f7cd3;
+    border: 1px solid #1f7cd3;
 }
 
 button:hover, button.active {

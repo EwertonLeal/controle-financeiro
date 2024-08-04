@@ -1,4 +1,5 @@
 .home_container {
+    margin-top: 20px;
     display: grid;
     grid-gap: 20px;
     grid-template:
@@ -85,9 +86,9 @@
 
 ::ng-deep {
     main {
-        background-color: #FAFCFF;
+        background-color: #FAFCFF !important;
         padding: 20px;
         overflow-y: scroll;
-        height: calc(100vh - 177px) !important;
+        height: calc(100vh - 90px) !important;
     }
 }

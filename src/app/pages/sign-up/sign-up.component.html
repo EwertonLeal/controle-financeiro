@@ -17,6 +17,18 @@
           </mat-error>
         </mat-form-field>
 
+        <mat-form-field appearance="outline" class="email_field">
+          <mat-label>E-mail</mat-label>
+          <input type="email" matInput formControlName="emailFormControl" [errorStateMatcher]="matcher"
+                 placeholder="Ex. pat@example.com">
+          <mat-error *ngIf="signUpForm.get('emailFormControl')?.hasError('email') && !signUpForm.get('emailFormControl')?.hasError('required')">
+            Digite um e-mail válidos!
+          </mat-error>
+          <mat-error *ngIf="signUpForm.get('emailFormControl')?.hasError('required')">
+            Email é <strong>obrigatorio</strong>
+          </mat-error>
+        </mat-form-field>
+
         <mat-form-field appearance="outline" class="password_field">
           <mat-label>Senha</mat-label>
           <input matInput type="password" placeholder="Digite sua senha" formControlName="passwordFormControl" [errorStateMatcher]="matcher">
@@ -39,7 +51,7 @@
           </mat-error>
         </mat-form-field>
 
-        <button class="btn_create">CRIE SUA CONTA</button>
+        <button class="btn_create" (click)="signUp($event)">CRIE SUA CONTA</button>
     </form>
 
     <p class="signUp_cta">Já possui uma conta ? <a routerLink="/login">Faça login</a></p>

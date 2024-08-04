@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, Validators } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
+import { AuthService } from 'src/app/core/services/auth/auth.service';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -18,11 +21,15 @@ export class SignUpComponent implements OnInit {
   matcher = new MyErrorStateMatcher();
   signUpForm!: FormGroup;
 
-  constructor(private fb: FormBuilder) {  }
+  constructor(
+    private fb: FormBuilder,
+    private auth: AuthService
+  ) {  }
 
   ngOnInit(): void {
     this.signUpForm = this.fb.group({
       nameFormControl: ['', [Validators.required]],
+      emailFormControl: ['', [Validators.required, Validators.email]],
       passwordFormControl: ['', [Validators.required]],
       confirmPasswordFormControl: ['', [Validators.required, this.matchPasswordValidator.bind(this)]]
     });
@@ -35,6 +42,21 @@ export class SignUpComponent implements OnInit {
     const password = this.signUpForm.get('passwordFormControl')?.value;
     const confirmPassword = control.value;
     return password === confirmPassword ? null : { mismatch: true };
+  };
+
+  signUp(event: any) {
+    event.preventDefault();
+
+    if (this.signUpForm.valid) {
+      const name: string = this.signUpForm.get('nameFormControl')?.value;
+      const email: string = this.signUpForm.get('emailFormControl')?.value;
+      const password: string = this.signUpForm.get('passwordFormControl')?.value;
+
+      this.auth.signUp(name, email, password);
+    }
+
+
   }
+
 
 }

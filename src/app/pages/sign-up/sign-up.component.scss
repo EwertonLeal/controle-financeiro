@@ -35,7 +35,7 @@
 
     display: grid;
     grid-template: 
-    "name_field name_field"
+    "name_field email_field"
     "password_field confirm_password_field"
     "btn_create btn_create";
 
@@ -59,6 +59,11 @@
 .name_field {
     grid-area: name_field;
 }
+
+.email_field {
+    grid-area: email_field;
+}
+
 
 .btn_create {
     grid-area: btn_create;
