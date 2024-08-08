@@ -2,21 +2,22 @@ header {
     display: flex;
     align-items: center;
     justify-content: space-between;
+
+    .navBar {
+        margin: 20px 0;
+        background-color: #ffffff;
+        padding: .5rem;
+        border-radius: 30px;
+    
+        display: flex;
+        gap: 1rem;
+    
+        box-sizing: border-box;
+        box-shadow: 0 1px 2px 0 #0000004d;
+    }
 }
 
-.navBar {
-    margin: 20px 0;
-    width: 40%;
-    background-color: #ffffff;
-    padding: .5rem;
-    border-radius: 30px;
 
-    display: flex;
-    gap: 1rem;
-
-    box-sizing: border-box;
-    box-shadow: 0 1px 2px 0 #0000004d;
-}
 
 button {
     background-color: #F6F6F6;
@@ -40,4 +41,16 @@ button:hover, button.active {
     background-color: #1f7cd3;
     color: #ffffff;
     transform: scale(1.02);
+}
+
+.user_container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+
+    .welcome_container {
+        h2 {
+            margin: 0;
+        }
+    }
 }

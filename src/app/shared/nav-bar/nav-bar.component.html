@@ -1,9 +1,18 @@
 <header>
     <nav class="navBar">
-        <button [routerLinkActive]="'/saídas'">Cadastrar saídas</button>
         <button [routerLinkActive]="'/entradas'">Cadastrar entradas</button>
+        <button [routerLinkActive]="'/saídas'">Cadastrar saídas</button>
         <button [routerLinkActive]="'/objetivos'">Cadastrar objetivos</button>
     </nav>
+    <div class="nav_container">
+    </div>
 
-    <button class="button_outline" (click)="signOut()">Sair</button>
+
+    <div class="user_container">
+        <div class="welcome_container">
+            <h2>Olá, {{ user.displayName }}</h2>
+        </div>
+    
+        <button class="button_outline" (click)="signOut()">Sair</button>
+    </div>
 </header>
