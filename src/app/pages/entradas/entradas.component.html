@@ -1,0 +1,57 @@
+<nav-bar></nav-bar>
+
+<div class="saldo_container">
+    <div class="total_container">
+        <div class="total_container_text">
+            <span>Total</span>
+            <h2>R$ 0,00</h2>
+        </div>
+    
+        <div class="total_container_icon">
+            <i class="fas fa-dollar-sign fa-2x"></i>
+        </div>
+    </div>
+
+    <button (click)="openDialog()">cadastrar receitas</button>
+</div>
+
+<div class="receitas_container">
+    <transacao-datepicker></transacao-datepicker>
+
+    <div class="receitas_table">
+        <table mat-table [dataSource]="dataSource">
+      
+          <ng-container matColumnDef="data">
+            <th mat-header-cell *matHeaderCellDef> Data. </th>
+            <td mat-cell *matCellDef="let element"> {{element.data | date:'dd/MM/yyyy'}} </td>
+          </ng-container>
+      
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef> Nome. </th>
+            <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="descricao">
+            <th mat-header-cell *matHeaderCellDef> Descrição. </th>
+            <td mat-cell *matCellDef="let element" [matTooltip]="element.descricao" matTooltipClass="my-custom-tooltip" matTooltipPosition="below"> {{element.descricao.slice(0, 30)}}... </td>
+          </ng-container>
+      
+          <ng-container matColumnDef="categoria">
+            <th mat-header-cell *matHeaderCellDef> Categoria. </th>
+            <td mat-cell *matCellDef="let element"> {{element.categoria}} </td>
+          </ng-container>
+      
+          <ng-container matColumnDef="valor">
+            <th mat-header-cell *matHeaderCellDef> Valor. </th>
+            <td mat-cell *matCellDef="let element"> {{element.valor}} </td>
+          </ng-container>
+      
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      
+        <mat-paginator [length]="5" [pageSizeOptions]="[5, 10, 15, 20]" aria-label="Select page"></mat-paginator>
+    </div>
+</div>
+
+<!-- <receitas-modal #receitas></receitas-modal> -->

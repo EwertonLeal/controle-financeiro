@@ -3,17 +3,16 @@ import { CommonModule } from '@angular/common';
 
 import { HomeRoutingModule } from './home.routing';
 import { HomeComponent } from './home.component';
-import { NavBarComponent } from 'src/app/shared/nav-bar/nav-bar.component';
-
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   declarations: [
-    HomeComponent,
-    NavBarComponent
+    HomeComponent
   ],
   imports: [
     CommonModule,
-    HomeRoutingModule
+    HomeRoutingModule,
+    SharedModule
   ]
 })
 export class HomeModule { }

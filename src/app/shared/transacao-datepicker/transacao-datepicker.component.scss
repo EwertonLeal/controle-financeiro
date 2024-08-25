@@ -1,0 +1,58 @@
+button {
+    background-color: #008000;
+    color: #ffffff;
+    border: none;
+    outline: none;
+    padding: 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: .3s;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+button:hover, button.active {
+    transform: scale(1.02);
+}
+
+.receitas_datepicker_container  {
+
+    div {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+    
+        i {
+            color: #008000;
+            cursor: pointer;
+            transition: .3s;
+        }
+    
+        i:hover {
+            transform: scale(1.02);
+        }
+    }
+
+    .btn_ano,
+    .btn_mes {
+        border-radius: 30px;
+        border: 1px solid #008000;
+        color: #008000;
+        background-color: transparent;
+        font-weight: 400;
+    }
+
+
+    .btn_row {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-top: 1rem;        
+
+        .btn_mes {
+            padding: 5px 15px;
+        }
+    }
+
+}

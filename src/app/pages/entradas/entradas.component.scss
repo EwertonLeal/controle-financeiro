@@ -1,0 +1,120 @@
+::ng-deep {
+    main {
+        background-color: #FAFCFF !important;
+        padding: 20px;
+        overflow-y: scroll;
+        height: calc(100vh - 90px) !important;
+    }
+}
+
+.saldo_container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.receitas_container,
+.total_container {
+    background-color: #fff;
+    padding: 20px;
+    box-sizing: border-box;
+    box-shadow: 0 1px 2px 0 #0000004d;
+}
+
+.saldo_container {
+    .total_container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    
+        width: 30%;
+        border-radius: 6px;
+        margin: 40px 0;
+    
+        h2 {
+            margin: 0;
+            color: #008000;
+        }
+    
+        .total_container_icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            
+            color: #fff;
+            background-color: #008000;
+            width: 50px;
+            height: 50px;
+            border-radius: 30px;
+        }
+    }
+}
+
+button {
+    background-color: #008000;
+    color: #ffffff;
+    border: none;
+    outline: none;
+    padding: 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: .3s;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+button:hover, button.active {
+    transform: scale(1.02);
+}
+
+.receitas_datepicker_container  {
+
+    div {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+    
+        i {
+            color: #008000;
+            cursor: pointer;
+            transition: .2s;
+        }
+    
+        i:hover {
+            transform: scale(1.02);
+        }
+    }
+
+    .btn_ano,
+    .btn_mes {
+        border-radius: 30px;
+        border: 1px solid #008000;
+        color: #008000;
+        background-color: transparent;
+        font-weight: 400;
+    }
+
+
+    .btn_row {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-top: 1rem;        
+
+        .btn_mes {
+            padding: 5px 15px;
+        }
+    }
+
+}
+
+.receitas_table {
+    margin-top: 40px;
+}
+
+::ng-deep {
+    .my-custom-tooltip .mdc-tooltip__surface {
+        max-width: 100% !important;
+    }
+}

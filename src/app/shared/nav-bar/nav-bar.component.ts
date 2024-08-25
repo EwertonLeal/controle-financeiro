@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
 
@@ -7,7 +7,7 @@ import { AuthService } from 'src/app/core/services/auth/auth.service';
   templateUrl: './nav-bar.component.html',
   styleUrls: ['./nav-bar.component.scss']
 })
-export class NavBarComponent implements OnInit {
+export class NavBarComponent {
 
   public user = this.authService.user.value;
 
@@ -15,12 +15,6 @@ export class NavBarComponent implements OnInit {
     private authService: AuthService,
     private router: Router
   ) {}
-
-
-  ngOnInit(): void {
-    console.log(this.user);
-    
-  }
 
   signOut() {
     this.authService.signOut().then(() => {
