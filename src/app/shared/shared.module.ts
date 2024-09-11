@@ -4,6 +4,8 @@ import { BannerComponent } from './banner/banner.component';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { RouterModule } from '@angular/router';
 import { TransacaoDatepickerComponent } from './transacao-datepicker/transacao-datepicker.component';
+import { MaterialModule } from './material/material.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -13,8 +15,11 @@ import { TransacaoDatepickerComponent } from './transacao-datepicker/transacao-d
     TransacaoDatepickerComponent
   ],
   imports: [
+    FormsModule,
+    ReactiveFormsModule,
     CommonModule,
-    RouterModule
+    RouterModule,
+    MaterialModule
   ],
   exports: [
     BannerComponent,

@@ -1,25 +1,32 @@
 <div class="receitas_datepicker_container">
+
+    <mat-form-field class="dp_year">
+        <input matInput [matDatepicker]="dp" [formControl]="date">
+        <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+        <mat-datepicker #dp startView="multi-year" (yearSelected)="chosenYearHandler($event, dp)">
+        </mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field class="dp_year">
+        <mat-label>Selecione o Ano</mat-label>
+        <input matInput [matDatepicker]="picker" readonly>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker startView="multi-year"  panelClass="year-picker">
+        </mat-datepicker>
+      </mat-form-field>
+
     <div>
-        <i class="fas fa-chevron-left fa-2x"></i>
-        <button class="btn_ano">
-            <strong>Agosto</strong>
-            2024
+        <i class="fas fa-chevron-left fa-2x" (click)="goToThePreviousMonth()"></i>
+        <button class="btn_ano" (click)="dp.open()">
+            <strong>{{ currentMonth.name }}</strong>
+            {{ currentYear }}
         </button>
-        <i class="fas fa-chevron-right fa-2x"></i>
+        <i class="fas fa-chevron-right fa-2x" (click)="goToTheNextMonth()"></i>
     </div>
 
     <div class="btn_row">
-        <button class="btn_mes" >JAN</button>
-        <button class="btn_mes" >FEV</button>
-        <button class="btn_mes" >MAR</button>
-        <button class="btn_mes" >ABRL</button>
-        <button class="btn_mes" >MAI</button>
-        <button class="btn_mes" >JUN</button>
-        <button class="btn_mes" >JUL</button>
-        <button class="btn_mes" >AGO</button>
-        <button class="btn_mes" >SET</button>
-        <button class="btn_mes" >OUT</button>
-        <button class="btn_mes" >NOV</button>
-        <button class="btn_mes" >DEZ</button>
+        <button class="btn_mes" *ngFor="let month of listOfMonths" (click)="changeMonth(month.index)" [ngClass]="{'active': (month.index == currentMonth.index)}">
+            {{ month.name }}
+        </button>
     </div>
 </div>

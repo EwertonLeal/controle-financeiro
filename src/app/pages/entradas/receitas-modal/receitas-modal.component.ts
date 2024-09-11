@@ -58,7 +58,7 @@ export class ReceitasModalComponent implements OnInit {
     this.receita_form = this.fb.group({
       valor_receita: ['', Validators.required],
       data_receita: ['', Validators.required],
-      descricao_receita: ['', Validators.required],
+      descricao_receita: [''],
       tipo_receita: ['', Validators.required],
       receita_fixa: [false, Validators.requiredTrue],
       repetir_receita: [false, Validators.requiredTrue],

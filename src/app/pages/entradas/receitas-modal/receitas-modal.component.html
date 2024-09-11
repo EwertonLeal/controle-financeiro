@@ -16,6 +16,9 @@
             <input formControlName="data_receita" matInput [matDatepicker]="dp3">
             <mat-datepicker-toggle matIconSuffix [for]="dp3"></mat-datepicker-toggle>
             <mat-datepicker #dp3 disabled="false"></mat-datepicker>
+            <mat-error>
+              Campo obrigatório
+            </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="description_field">
@@ -43,6 +46,9 @@
                 {{category}}
               </mat-option>
             </mat-autocomplete>
+            <mat-error>
+              Campo obrigatório
+            </mat-error>
         </mat-form-field>
 
         <mat-slide-toggle formControlName="receita_fixa" (change)="onReceitaFixa($event)">Receita fixa ?</mat-slide-toggle>
@@ -53,6 +59,9 @@
           <mat-form-field appearance="outline" class="qtd_field">
             <input formControlName="quantidade_receita" matInput type="number" value="1" min="1" [step]="1">
             <small matSuffix>vezes</small>
+            <mat-error>
+              Campo obrigatório
+            </mat-error>
           </mat-form-field>
   
           <mat-form-field appearance="outline" class="intervalo_field">

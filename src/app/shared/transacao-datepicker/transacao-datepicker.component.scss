@@ -41,8 +41,17 @@ button:hover, button.active {
         color: #008000;
         background-color: transparent;
         font-weight: 400;
+
+        strong {
+            text-transform: capitalize;
+        }
     }
 
+    .btn_mes.active {
+        border: 1px solid #008000;
+        background-color: #008000; 
+        color: #ffffff; 
+    }
 
     .btn_row {
         display: flex;
@@ -55,4 +64,23 @@ button:hover, button.active {
         }
     }
 
+}
+
+::ng-deep .dp_year {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 30%;
+    opacity: 0;
+    pointer-events: none;
+
+    .mat-mdc-form-field-icon-suffix {
+        display: none !important;
+    }
+}
+
+::ng-deep .mat-calendar-header {
+    button:first-child {
+        display: none !important;
+    }
 }
