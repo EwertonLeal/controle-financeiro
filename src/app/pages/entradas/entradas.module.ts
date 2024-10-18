@@ -7,12 +7,13 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { EntradasComponent } from './entradas.component';
 import { ReceitasModalComponent } from './receitas-modal/receitas-modal.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TransacaoDatepickerComponent } from 'src/app/shared/transacao-datepicker/transacao-datepicker.component';
 
 
 @NgModule({
   declarations: [
     EntradasComponent,
-    ReceitasModalComponent
+    ReceitasModalComponent,
   ],
   imports: [
     FormsModule,
@@ -20,6 +21,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     ReactiveFormsModule,
     EntradasRoutingModule,
     MaterialModule,
+    TransacaoDatepickerComponent,
     SharedModule
   ]
 })

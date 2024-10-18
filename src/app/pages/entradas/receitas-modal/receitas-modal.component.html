@@ -79,5 +79,5 @@
 
 <div mat-dialog-actions align="end">
   <button class="btn_modal_cancel" mat-dialog-close>Cancelar</button>
-  <button [disabled]="!receita_form.valid" class="btn_modal" [mat-dialog-close]="true" cdkFocusInitial>Salvar</button>
+  <button [disabled]="!receita_form.valid" (click)="criarTransacao()" class="btn_modal" [mat-dialog-close]="true" cdkFocusInitial>Salvar</button>
 </div>

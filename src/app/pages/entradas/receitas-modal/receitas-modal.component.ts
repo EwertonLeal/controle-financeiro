@@ -7,6 +7,8 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { map, Observable, startWith } from 'rxjs';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import { Intervalo } from 'src/app/shared/models/intervalo.model';
+import { TransactionsService } from 'src/app/core/services/transactions/transactions.service';
+import { Transacao } from 'src/app/shared/models/transacao.model';
 
 @Component({
   selector: 'receitas-modal',
@@ -32,6 +34,7 @@ export class ReceitasModalComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<ReceitasModalComponent>,
     private fb: FormBuilder,
+    private _transactionService: TransactionsService
   ) {
     this.filteredCategorys = this.categoryCtrl.valueChanges.pipe(
       startWith(null),
@@ -50,18 +53,18 @@ export class ReceitasModalComponent implements OnInit {
     this.selectedCategory = [this.categoryName[0]];
 
     this.intervals = [
-      { value: 'dias-0', viewValue: 'Dia(s)' },
-      { value: 'semanas-0', viewValue: 'Semana(s)' },
-      { value: 'meses-0', viewValue: 'Mese(s)' },
+      { value: 'dias', viewValue: 'Dia(s)' },
+      { value: 'semanas', viewValue: 'Semana(s)' },
+      { value: 'meses', viewValue: 'Mese(s)' },
     ];
 
     this.receita_form = this.fb.group({
       valor_receita: ['', Validators.required],
       data_receita: ['', Validators.required],
       descricao_receita: [''],
-      tipo_receita: ['', Validators.required],
-      receita_fixa: [false, Validators.requiredTrue],
-      repetir_receita: [false, Validators.requiredTrue],
+      tipo_receita: [this.selectedCategory[0], Validators.required],
+      receita_fixa: [false],
+      repetir_receita: [false],
       quantidade_receita: [{ value: '', disabled: true }],
       intervalo_receita: [{ value: '', disabled: true }]
     });
@@ -97,6 +100,7 @@ export class ReceitasModalComponent implements OnInit {
     this.selectedCategory = [event.option.viewValue]
     this.categoryInput.nativeElement.value = '';
     this.categoryCtrl.setValue(null);
+    this.receita_form.controls['tipo_receita'].setValue(this.selectedCategory[0]);
   }
 
   private _filter(value: string): string[] {
@@ -130,4 +134,23 @@ export class ReceitasModalComponent implements OnInit {
       this.receita_form.get('intervalo_receita')?.disable({ emitEvent: false });
     }
   }
+
+  criarTransacao() {
+    const receita: Transacao = {
+      tipo_transacao: "receita",
+      preco: this.receita_form.get('valor_receita')?.value,
+      data: new Date(this.receita_form.get('data_receita')?.value).toISOString(),
+      ano: new Date(this.receita_form.get('data_receita')?.value).getFullYear(),
+      mes: new Date(this.receita_form.get('data_receita')?.value).getMonth(),
+      descricao: this.receita_form.get('descricao_receita')?.value,
+      categoria: this.receita_form.get('tipo_receita')?.value,
+      transacao_fixa: this.receita_form.get('receita_fixa')?.value,
+      transacao_repetida: this.receita_form.get('repetir_receita')?.value,
+      quantidade_repeticao: this.receita_form.get('quantidade_receita')?.value,
+      intervalo: this.receita_form.get('intervalo_receita')?.value
+    }    
+
+    this._transactionService.createTransaction(receita);
+  }
+
 }

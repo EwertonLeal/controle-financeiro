@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { IDate } from './interface/date.interface';
-import { FormControl } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { IDate } from '../interface/date.interface';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Moment } from 'moment';
 import { DateAdapter, MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material/core';
 import * as moment from 'moment';
 import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
-import { MatDatepicker } from '@angular/material/datepicker';
+import { CommonModule } from '@angular/common';
+import { MaterialModule } from '../material/material.module';
 
 export const MY_FORMATS = {
   parse: {
@@ -23,15 +24,21 @@ export const MY_FORMATS = {
   selector: 'transacao-datepicker',
   templateUrl: './transacao-datepicker.component.html',
   styleUrls: ['./transacao-datepicker.component.scss'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MaterialModule
+  ],
   providers: [
     {
       provide: DateAdapter,
       useClass: MomentDateAdapter,
       deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
     },
-
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TransacaoDatepickerComponent implements OnInit {
   public date = new FormControl(moment());
@@ -52,6 +59,11 @@ export class TransacaoDatepickerComponent implements OnInit {
    {index: 11, name: "DEZ"}
   ];
 
+ @Output() selectedYearEmiter: EventEmitter<number> = new EventEmitter<number>;
+ @Output() selectedMonthEmiter: EventEmitter<IDate> = new EventEmitter<IDate>;
+ @Output() nextMonthEmiter: EventEmitter<IDate> = new EventEmitter<IDate>;
+ @Output() previousMonthEmiter: EventEmitter<IDate> = new EventEmitter<IDate>;
+
   constructor() {}
 
   ngOnInit(): void {
@@ -68,14 +80,39 @@ export class TransacaoDatepickerComponent implements OnInit {
       index: newMonth.getMonth(),
       name: newMonth.toLocaleString('default', {month: 'long'})
     }
+
+    this.selectedMonthEmiter.emit(this.currentMonth);
   }
 
   public goToTheNextMonth() {
-    this.changeMonth(this.currentMonth.index + 1)
+    const newMonth = new Date(new Date().setMonth(this.currentMonth.index + 1));
+    this.currentMonth = {
+      previousIndex: this.currentMonth.index,
+      index: newMonth.getMonth(),
+      name: newMonth.toLocaleString('default', {month: 'long'})
+    }
+
+    if(this.currentMonth.previousIndex == 11) {
+      this.currentYear = this.currentYear + 1;
+    }
+
+    this.nextMonthEmiter.emit(this.currentMonth)
   }
 
   public goToThePreviousMonth() {
-    this.changeMonth(this.currentMonth.index - 1)
+    const newMonth = new Date(new Date().setMonth(this.currentMonth.index - 1));
+    this.currentMonth = {
+      previousIndex: this.currentMonth.index,
+      index: newMonth.getMonth(),
+      name: newMonth.toLocaleString('default', {month: 'long'})
+    }
+
+    if(this.currentMonth.previousIndex == 0) {
+      this.currentYear = this.currentYear - 1;
+    }
+
+
+    this.previousMonthEmiter.emit(this.currentMonth)
   }
 
   public chosenYearHandler(normalizedYear: Moment, dp: any) {
@@ -84,6 +121,7 @@ export class TransacaoDatepickerComponent implements OnInit {
     this.date.setValue(ctrlValue);
     this.currentYear = normalizedYear.year();
 
+    this.selectedYearEmiter.emit(this.currentYear);
     dp.close();
   }
 

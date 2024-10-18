@@ -111,6 +111,30 @@ button:hover, button.active {
 
 .receitas_table {
     margin-top: 40px;
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+          
+        tr:nth-child(even) {
+          background-color: #dddddd;
+        }
+    }
+}
+
+.noTransaction-container {
+    padding: 1rem;
+    text-align: center;
+
+    img {
+        margin-bottom: 1rem;
+    }
 }
 
 ::ng-deep {
