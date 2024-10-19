@@ -4,7 +4,7 @@
     <div class="total_container">
         <div class="total_container_text">
             <span>Total</span>
-            <h2>R$ 0,00</h2>
+            <h2>{{ totalPerMonth | currency : "BRL" }}</h2>
         </div>
     
         <div class="total_container_icon">
@@ -34,7 +34,7 @@
         </tr>
 
         <tr *ngFor="let transacao of listaTransacoes">
-          <td>Concluído</td>
+          <td>{{ transacao.status }}</td>
           <td>{{ transacao.data | date : 'dd/MM/yyyy' }}</td>
           <td>{{ transacao.preco | currency: 'BRL' }}</td>
           <td>{{ transacao.descricao }}</td>

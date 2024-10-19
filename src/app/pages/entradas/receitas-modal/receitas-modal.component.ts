@@ -81,12 +81,10 @@ export class ReceitasModalComponent implements OnInit {
   add(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();
 
-    // Add our fruit
     if (value) {
       this.selectedCategory = [value];
     }
 
-    // Clear the input value
     event.chipInput!.clear();
 
     this.categoryCtrl.setValue(null);
@@ -137,6 +135,7 @@ export class ReceitasModalComponent implements OnInit {
 
   criarTransacao() {
     const receita: Transacao = {
+      status: new Date(this.receita_form.get('data_receita')?.value) <= new Date() ? 'Concluído' : 'Pendente',
       tipo_transacao: "receita",
       preco: this.receita_form.get('valor_receita')?.value,
       data: new Date(this.receita_form.get('data_receita')?.value).toISOString(),

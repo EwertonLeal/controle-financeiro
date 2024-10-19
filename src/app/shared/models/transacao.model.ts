@@ -1,4 +1,5 @@
 export interface Transacao {
+    status: string;
     tipo_transacao: string;
     preco: number;
     data: string;

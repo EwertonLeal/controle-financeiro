@@ -52,7 +52,7 @@ export class TransactionsService {
     // Consulta para transacoes repetidas
     const query3 = this.fireStore.collection(this.dbPath, ref => {
       let queryRef = ref
-        .where('intervalo', '==', 'meses')
+        .where('intervalo', 'in', ['dias', 'semanas', 'meses'])
         .orderBy('data', 'asc')
         .limit(itemsPerPage);
   
