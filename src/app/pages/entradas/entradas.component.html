@@ -1,7 +1,8 @@
 <nav-bar></nav-bar>
 
 <div class="saldo_container">
-    <div class="total_container">
+    <div class="saldo_card_row">
+      <div class="total_container">
         <div class="total_container_text">
             <span>Total</span>
             <h2>{{ totalPerMonth | currency : "BRL" }}</h2>
@@ -10,6 +11,29 @@
         <div class="total_container_icon">
             <i class="fas fa-dollar-sign fa-2x"></i>
         </div>
+      </div>
+
+      <div class="total_container">
+          <div class="total_container_text">
+              <span>Total concluído</span>
+              <h2>{{ totalConcludedPerMonth | currency : "BRL" }}</h2>
+          </div>
+      
+          <div class="total_container_icon">
+              <i class="fas fa-dollar-sign fa-2x"></i>
+          </div>
+      </div>
+
+      <div class="total_container">
+          <div class="total_container_text">
+              <span>Total pendente</span>
+              <h2>{{ totalPendingPerMonth | currency : "BRL" }}</h2>
+          </div>
+      
+          <div class="total_container_icon">
+              <i class="fas fa-dollar-sign fa-2x"></i>
+          </div>
+      </div>
     </div>
 
     <button (click)="openDialog()">cadastrar receitas</button>

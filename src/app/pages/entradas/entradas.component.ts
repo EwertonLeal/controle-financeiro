@@ -25,6 +25,8 @@ export class EntradasComponent extends OnDestroyService implements OnInit {
   pageIndex: number = 0;
   pageSize: number = 5;
   totalPerMonth: number = 0;
+  totalConcludedPerMonth: number = 0;
+  totalPendingPerMonth: number = 0;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -51,7 +53,17 @@ export class EntradasComponent extends OnDestroyService implements OnInit {
   getFinancialIncomeByDate(year: number, month: number) {
     this._transactionService.getFinancialIncomeTransactions(year, month, this.pageSize).pipe(takeUntil(this.destroy$)).subscribe(({ transacoes, lastItem }) => {
       this.todasTransacoes = this.generateRepeatedTransactions(transacoes, this.pageSize);
+      
       this.totalPerMonth = this.todasTransacoes.reduce((acc: number, cur: Transacao) => acc + cur.preco, 0);
+      
+      this.totalConcludedPerMonth = this.todasTransacoes
+        .filter((transacoes) => transacoes.status == 'Concluído')
+        .reduce((acc: number, cur: Transacao) => acc + cur.preco, 0);
+      
+        this.totalPendingPerMonth = this.todasTransacoes
+        .filter((transacoes) => transacoes.status == 'Pendente')
+        .reduce((acc: number, cur: Transacao) => acc + cur.preco, 0);
+
       this.lastVisibleItem = lastItem;
       this.updatePaginatedList(this.pageIndex, this.pageSize);
     });

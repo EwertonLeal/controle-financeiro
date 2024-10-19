@@ -27,7 +27,7 @@
         align-items: center;
         justify-content: space-between;
     
-        width: 30%;
+        width: 100%;
         border-radius: 6px;
         margin: 40px 0;
     
@@ -48,6 +48,12 @@
             border-radius: 30px;
         }
     }
+}
+
+.saldo_card_row {
+    width: 80%;
+    display: flex;
+    gap: 1rem;
 }
 
 button {
