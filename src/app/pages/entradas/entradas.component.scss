@@ -143,6 +143,24 @@ button:hover, button.active {
     }
 }
 
+.botoes_acao {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+
+    i:hover {
+        cursor: pointer;
+    }
+
+    i:hover:nth-child(1) {
+        color: goldenrod;
+    }
+
+    i:hover:nth-child(2) {
+        color: #da2020;
+    }
+}
+
 ::ng-deep {
     .my-custom-tooltip .mdc-tooltip__surface {
         max-width: 100% !important;

@@ -1,93 +1,91 @@
 import { Injectable } from '@angular/core';
-import { combineLatest, from, map, Observable, tap } from 'rxjs';
+import { combineLatest, map, Observable, tap } from 'rxjs';
 import { Transacao } from 'src/app/shared/models/transacao.model';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { AngularFirestore, DocumentChangeAction } from '@angular/fire/compat/firestore';
+import { OnDestroyService } from 'src/app/shared/service/onDestroy/on-destroy.service';
+
 
 @Injectable({
   providedIn: 'root'
 })
-export class TransactionsService {
+export class TransactionsService extends OnDestroyService {
 
   private dbPath = 'transacoes';
+  private lastVisible: any = null;
 
   constructor(
     private db: AngularFireDatabase,
     private fireStore: AngularFirestore
-  ) { }
-
-  createTransaction(transacao: Transacao) {
-    this.fireStore.collection(this.dbPath).doc(this.fireStore.createId()).set(transacao);
+  ) {
+    super();
   }
 
-  getFinancialIncomeTransactions(ano: number, mes: number, itemsPerPage: number, lastVisibleItem?: any ): Observable<any> {
-    const query1 = this.fireStore.collection(this.dbPath, ref => {
+  createTransaction(transacao: Transacao) {
+    this.fireStore.collection(this.dbPath).doc().set(transacao);
+  }
+
+  getFinancialIncomeTransactions(ano: number, mes: number, itemsPerPage: number, accountId: string, lastVisibleItem: any): Observable<any> {
+    const query = this.fireStore.collection(this.dbPath, ref => {
       let queryRef = ref
         .where('ano', '==', ano)
         .where('mes', '==', mes)
+        .where('accountId', '==', accountId)
         .orderBy('data', 'asc')
         .limit(itemsPerPage);
   
       if (lastVisibleItem) {
-        queryRef = queryRef.startAfter(lastVisibleItem);
+        queryRef = queryRef.startAfter(lastVisibleItem)
       }
   
       return queryRef;
     }).snapshotChanges();
   
-    // Consulta para transações fixas
-    const query2 = this.fireStore.collection(this.dbPath, ref => {
-      let queryRef = ref
-        .where('transacao_fixa', '==', true)
-        .orderBy('data', 'asc')
-        .limit(itemsPerPage);
-  
-      if (lastVisibleItem) {
-        queryRef = queryRef.startAfter(lastVisibleItem);
-      }
-  
-      return queryRef;
-    }).snapshotChanges();
 
-    // Consulta para transacoes repetidas
-    const query3 = this.fireStore.collection(this.dbPath, ref => {
-      let queryRef = ref
-        .where('intervalo', 'in', ['dias', 'semanas', 'meses'])
-        .orderBy('data', 'asc')
-        .limit(itemsPerPage);
-  
-      if (lastVisibleItem) {
-        queryRef = queryRef.startAfter(lastVisibleItem);
-      }
-  
-      return queryRef;
-    }).snapshotChanges();
-  
-    return combineLatest([query1, query2, query3]).pipe(
-      map(([result1, result2, result3]: [DocumentChangeAction<unknown>[], DocumentChangeAction<unknown>[], DocumentChangeAction<unknown>[]]) => {
-        const combinedResults = [...result1, ...result2, ...result3];
-        const lastItem = combinedResults[combinedResults.length - 1]?.payload.doc.data() as Transacao;
-        let transacoes = combinedResults.map(change => change.payload.doc.data() as Transacao);
+    return combineLatest([
+      query.pipe(
+        map((result: DocumentChangeAction<unknown>[]) => result.map(x => x.payload)
+      ),
+      map(payloads => {
+        const transacoes: Transacao[] = payloads.map(payload => payload.doc.data() as Transacao);
+        const lastItem =  payloads[payloads.length - 1].doc;
 
-        transacoes = transacoes.reduce((acc: Transacao[], current: Transacao) => {
-          const chaveUnica = `${current.descricao}-${current.data}-${current.preco}-${current.categoria}`;
-          const jaExiste = acc.some(transacao => 
-            `${transacao.descricao}-${transacao.data}-${transacao.preco}-${transacao.categoria}` === chaveUnica
-          );
-      
-          if (!jaExiste) {
-            acc.push(current);
-          }
-      
-          return acc;
-        }, []);
-  
         return {
           transacoes,
           lastItem
-        };
+        }
+      }),
+    ),
+
+    this.getTotalCount(),
+
+    ]).pipe(
+      map(([{transacoes, lastItem}, total]) => ({ transacoes, lastItem,  total }))
+    );
+
+  }
+
+  getTransactionsById(id: string, mes: number, ano: number) {
+    const query = this.fireStore.collection(this.dbPath, ref => {
+      let queryRef = ref
+        .where('id', '==', id)
+        .where('ano', '==', ano)
+        .where('mes', '==', mes)
+        .orderBy('data', 'asc');
+  
+      return queryRef;
+    }).snapshotChanges();
+
+    return query.pipe(
+      map((change: DocumentChangeAction<unknown>[]) => {
+        return change.map(x => x.payload.doc.data() as Transacao)
       })
     );
   }
 
+  getTotalCount(): Observable<number> {
+    return this.fireStore.collection(this.dbPath).get().pipe(
+      map(snapshot => snapshot.size)
+    );
+  }
 }

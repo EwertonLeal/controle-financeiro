@@ -4,13 +4,14 @@ import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
+import { IUser } from 'src/app/shared/models/user.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  public user: BehaviorSubject<any> = new BehaviorSubject(null);
+  public user: BehaviorSubject<IUser | null> = new BehaviorSubject<IUser | null>(null);
 
   constructor(
     private auth: AngularFireAuth, 
@@ -27,7 +28,13 @@ export class AuthService {
 
   signIn(email: string, password: string) {
     return this.auth.signInWithEmailAndPassword(email, password).then(credential => {
-      const user = credential.user?.providerData[0];
+      const user: IUser = {
+        id: String(credential.user?.uid),
+        displayName: String(credential.user?.providerData[0]?.displayName),
+        email: String(credential.user?.providerData[0]?.email),
+        phoneNumber: String(credential.user?.providerData[0]?.phoneNumber),
+        photoUrl: String(credential.user?.providerData[0]?.photoURL),
+      };
     
       sessionStorage.setItem('user', JSON.stringify(user));
       this.user.next(user);
@@ -39,14 +46,11 @@ export class AuthService {
   
   signUp(nome: string, email: string, password: string) {
     return this.auth.createUserWithEmailAndPassword(email, password).then(res => {
-      const user = res.user?.providerData[0];
+
+      res.user?.updateProfile({
+        displayName: nome
+      });
       
-      if(user && user.uid && res.user?.uid) {
-        user.uid = res.user?.uid;
-        res.user?.updateProfile({
-          displayName: nome
-        });
-      }
       const durantion = 2000;
       this.openSnackBar('usuário cadastrado com sucesso!', 'fechar', durantion, 'success-snackbar')
       setTimeout(() => {

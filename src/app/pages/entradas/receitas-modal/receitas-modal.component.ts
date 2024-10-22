@@ -9,6 +9,9 @@ import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import { Intervalo } from 'src/app/shared/models/intervalo.model';
 import { TransactionsService } from 'src/app/core/services/transactions/transactions.service';
 import { Transacao } from 'src/app/shared/models/transacao.model';
+import { v4 as uuidv4 } from 'uuid';
+import { AuthService } from 'src/app/core/services/auth/auth.service';
+import { IUser } from 'src/app/shared/models/user.model';
 
 @Component({
   selector: 'receitas-modal',
@@ -30,11 +33,13 @@ export class ReceitasModalComponent implements OnInit {
   @ViewChild('categoryInput') categoryInput!: ElementRef<HTMLInputElement>;
 
   announcer = inject(LiveAnnouncer);
+  public user:IUser| null = this._authService.user.value;
 
   constructor(
     public dialogRef: MatDialogRef<ReceitasModalComponent>,
     private fb: FormBuilder,
-    private _transactionService: TransactionsService
+    private _transactionService: TransactionsService,
+    private _authService: AuthService
   ) {
     this.filteredCategorys = this.categoryCtrl.valueChanges.pipe(
       startWith(null),
@@ -135,6 +140,9 @@ export class ReceitasModalComponent implements OnInit {
 
   criarTransacao() {
     const receita: Transacao = {
+      id: uuidv4(),
+      accountId: String(this.user?.id),
+      uniqueId: uuidv4(),
       status: new Date(this.receita_form.get('data_receita')?.value) <= new Date() ? 'Concluído' : 'Pendente',
       tipo_transacao: "receita",
       preco: this.receita_form.get('valor_receita')?.value,
@@ -147,9 +155,75 @@ export class ReceitasModalComponent implements OnInit {
       transacao_repetida: this.receita_form.get('repetir_receita')?.value,
       quantidade_repeticao: this.receita_form.get('quantidade_receita')?.value,
       intervalo: this.receita_form.get('intervalo_receita')?.value
-    }    
+    }
 
-    this._transactionService.createTransaction(receita);
+    if(receita.transacao_repetida) {
+      
+      switch (receita.intervalo) {
+        case "dias":
+          for (let i = 0; i < receita.quantidade_repeticao; i++) {
+            
+            let newDate: any = new Date(receita.data);
+            newDate = newDate.setDate(newDate.getDate() + i);
+
+            const newTransction: Transacao = { 
+              ...receita,
+              uniqueId: uuidv4(),
+              descricao: receita.descricao + `[${i+1} / ${receita.quantidade_repeticao}]`,
+              status: new Date(newDate) <= new Date() ? 'Concluído' : 'Pendente',
+              data: new Date(newDate).toISOString(),
+              ano: new Date(newDate).getFullYear(),
+              mes: new Date(newDate).getMonth()
+            };
+
+            this._transactionService.createTransaction(newTransction);
+          }
+
+          break;
+
+        case "semanas":
+          for (let i = 0; i <= receita.quantidade_repeticao; i++) {
+            
+            let newDate: any = new Date(receita.data);
+            newDate = newDate.setDate(newDate.getDate() + (7 * i));
+
+            const newTransction: Transacao = { 
+              ...receita,
+              uniqueId: uuidv4(),
+              status: new Date(newDate) <= new Date() ? 'Concluído' : 'Pendente',
+              data: new Date(newDate).toISOString(),
+              ano: new Date(newDate).getFullYear(),
+              mes: new Date(newDate).getMonth()
+            };
+            
+            this._transactionService.createTransaction(newTransction);
+          }
+          break;
+
+        case "meses":
+          for (let i = 0; i <= receita.quantidade_repeticao; i++) {
+            let newDate: any = new Date(receita.data);
+            newDate = newDate.setMonth(newDate.getMonth() + i);
+
+            const newTransction = {
+              ...receita,
+              uniqueId: uuidv4(),
+              status: new Date(newDate) <= new Date() ? 'Concluído' : 'Pendente',
+              data: new Date(newDate).toISOString(),
+              ano: new Date(newDate).getFullYear(),
+              mes: new Date(newDate).getMonth()
+            };
+
+            this._transactionService.createTransaction(newTransction);
+          }
+        break;
+      }
+
+    } else {
+      this._transactionService.createTransaction(receita);
+
+    }
+
   }
 
 }

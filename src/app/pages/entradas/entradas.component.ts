@@ -5,9 +5,12 @@ import { MatDialog } from '@angular/material/dialog';
 import { DateAdapter } from '@angular/material/core';
 import { TransactionsService } from 'src/app/core/services/transactions/transactions.service';
 import { Transacao } from 'src/app/shared/models/transacao.model';
-import { IDate } from 'src/app/shared/interface/date.interface';
+import { IDate } from 'src/app/shared/models/date.interface';
 import { takeUntil } from 'rxjs';
 import { OnDestroyService } from 'src/app/shared/service/onDestroy/on-destroy.service';
+import { v4 as uuidv4 } from 'uuid';
+import { IUser } from 'src/app/shared/models/user.model';
+import { AuthService } from 'src/app/core/services/auth/auth.service';
 
 @Component({
   selector: 'app-entradas',
@@ -19,7 +22,8 @@ export class EntradasComponent extends OnDestroyService implements OnInit {
   currentMonth: number = new Date().getMonth();
   listaTransacoes: Transacao[] = [];
   todasTransacoes: Transacao[] = [];
-  lastVisibleItem!: Transacao;
+  lastVisibleItem: any = null;
+  totalCount: number = 0;
   startIndex:number = 5;
   endIndex:number = 10;
   pageIndex: number = 0;
@@ -27,20 +31,22 @@ export class EntradasComponent extends OnDestroyService implements OnInit {
   totalPerMonth: number = 0;
   totalConcludedPerMonth: number = 0;
   totalPendingPerMonth: number = 0;
-
+  user:IUser| null = this._authService.user.value;
+  
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   constructor(
     private dialog: MatDialog,
     private dateAdapter: DateAdapter<any>,
-    private _transactionService: TransactionsService
+    private _transactionService: TransactionsService,
+    private _authService: AuthService
   ) {
     super();
   }
 
   ngOnInit(): void {
     this.dateAdapter.setLocale('pt-br');
-    this.getFinancialIncomeByDate(this.currentYear, this.currentMonth);
+    this.getFinancialIncomeByDate(this.currentYear, this.currentMonth, String(this.user?.id), null);
   }
 
   openDialog(): void {
@@ -50,29 +56,27 @@ export class EntradasComponent extends OnDestroyService implements OnInit {
     });
   }
 
-  getFinancialIncomeByDate(year: number, month: number) {
-    this._transactionService.getFinancialIncomeTransactions(year, month, this.pageSize).pipe(takeUntil(this.destroy$)).subscribe(({ transacoes, lastItem }) => {
-      this.todasTransacoes = this.generateRepeatedTransactions(transacoes, this.pageSize);
-      
+  getFinancialIncomeByDate(year: number, month: number, accountId: string, lastVisibleItem: any) {
+    this._transactionService.getFinancialIncomeTransactions(year, month, this.pageSize, accountId, lastVisibleItem).pipe(takeUntil(this.destroy$)).subscribe((data) => {
+      this.todasTransacoes = data.transacoes;
+      this.lastVisibleItem = data.lastItem;
+      this.totalCount = data.total;
+
       this.totalPerMonth = this.todasTransacoes.reduce((acc: number, cur: Transacao) => acc + cur.preco, 0);
-      
       this.totalConcludedPerMonth = this.todasTransacoes
         .filter((transacoes) => transacoes.status == 'Concluído')
         .reduce((acc: number, cur: Transacao) => acc + cur.preco, 0);
-      
-        this.totalPendingPerMonth = this.todasTransacoes
+      this.totalPendingPerMonth = this.todasTransacoes
         .filter((transacoes) => transacoes.status == 'Pendente')
         .reduce((acc: number, cur: Transacao) => acc + cur.preco, 0);
-
-      this.lastVisibleItem = lastItem;
-      this.updatePaginatedList(this.pageIndex, this.pageSize);
     });
   }
 
   changeYear(newYear: number) {
     this.currentYear = newYear;
 
-    this.getFinancialIncomeByDate(this.currentYear, this.currentMonth);
+    this.gerarTransacoesFixas(this.currentMonth, this.currentYear);
+    this.getFinancialIncomeByDate(this.currentYear, this.currentMonth, String(this.user?.id), null);
 
     if (this.paginator) {
       this.paginator.firstPage();
@@ -84,7 +88,8 @@ export class EntradasComponent extends OnDestroyService implements OnInit {
     this.listaTransacoes = [];
     this.currentMonth = newMonth.index;
     
-    this.getFinancialIncomeByDate(this.currentYear, this.currentMonth);
+    this.gerarTransacoesFixas(this.currentMonth, this.currentYear);
+    this.getFinancialIncomeByDate(this.currentYear, this.currentMonth, String(this.user?.id), null);
     
     if (this.paginator) {
       this.paginator.firstPage();
@@ -99,7 +104,8 @@ export class EntradasComponent extends OnDestroyService implements OnInit {
       this.currentYear = this.currentYear + 1;
     }
 
-    this.getFinancialIncomeByDate(this.currentYear, this.currentMonth);
+    this.gerarTransacoesFixas(this.currentMonth, this.currentYear);
+    this.getFinancialIncomeByDate(this.currentYear, this.currentMonth, String(this.user?.id), null);
 
     if (this.paginator) {
       this.paginator.firstPage();
@@ -115,7 +121,7 @@ export class EntradasComponent extends OnDestroyService implements OnInit {
       this.currentYear = this.currentYear - 1;
     }
 
-    this.getFinancialIncomeByDate(this.currentYear, this.currentMonth);
+    this.getFinancialIncomeByDate(this.currentYear, this.currentMonth, String(this.user?.id), null);
 
     if (this.paginator) {
       this.paginator.firstPage();
@@ -125,116 +131,47 @@ export class EntradasComponent extends OnDestroyService implements OnInit {
   onPageChange(event: PageEvent) {
     this.pageIndex = event.pageIndex
     this.pageSize = event.pageSize;
-    this.updatePaginatedList(this.pageIndex, this.pageSize);
+
+    if(this.pageIndex == 0) {
+      this.lastVisibleItem = null;
+      this.getFinancialIncomeByDate(this.currentYear, this.currentMonth, String(this.user?.id), null);
+      return;
+    }
+
+    this.getFinancialIncomeByDate(this.currentYear, this.currentMonth, String(this.user?.id), this.lastVisibleItem);
+
   }
 
-  private generateRepeatedTransactions(transacoes: Transacao[], itemsPerPage: number): Transacao[] {
-    const allTransactions: Transacao[] = [];
+  private gerarTransacoesFixas(mes: number, ano: number) {
+    const transacoesFixas = this.todasTransacoes.filter((transacao: Transacao) => transacao.transacao_fixa );
+
+    if(transacoesFixas.length == 0) {
+      return;
+    }
+
+    transacoesFixas.forEach((transacaoFixa: Transacao) => {
+      let newDate: any = new Date(transacaoFixa.data);
+      const currentDate = new Date(this.currentYear, this.currentMonth, new Date().getDate());
   
-    transacoes.forEach((transacao: Transacao) => {
-      if (transacao.transacao_repetida) {
-        switch (transacao.intervalo) {
-          case "dias":
-            let transacoesRepetidasDias: Transacao[] = [];
+      if(currentDate >= newDate) {
+        newDate = newDate.setFullYear(this.currentYear, this.currentMonth, newDate.getDate())
+
+        this._transactionService.getTransactionsById(transacaoFixa.id, new Date(newDate).getMonth(), new Date(newDate).getFullYear()).pipe(takeUntil(this.destroy$)).subscribe(transacao => {
+          if(transacao.length == 0) {
+            const transacao: Transacao = {
+              ...transacaoFixa,
+              data: new Date(newDate).toISOString(),
+              ano: new Date(newDate).getFullYear(),
+              mes: new Date(newDate).getMonth(),
+              uniqueId: uuidv4()
+            }
+            
+            this._transactionService.createTransaction(transacao);
+          }
           
-            for (let i = 0; i < transacao.quantidade_repeticao; i++) {
-              
-              let newDate: any = new Date(transacao.data);
-              newDate = newDate.setDate(newDate.getDate() + i);
-  
-              const newTransction: Transacao = { 
-                ...transacao,
-                status: new Date(newDate) <= new Date() ? 'Concluído' : 'Pendente',
-                data: new Date(newDate).toISOString(),
-                ano: new Date(newDate).getFullYear(),
-                mes: new Date(newDate).getMonth()
-              };
-
-              transacoesRepetidasDias.push(newTransction)
-
-            }
-            transacoesRepetidasDias = transacoesRepetidasDias.filter(transacaoRepetida => transacaoRepetida.ano == this.currentYear && transacaoRepetida.mes == this.currentMonth );
-            allTransactions.push(...transacoesRepetidasDias);
-
-            break;
-  
-          case "semanas":
-            let transacoesRepetidasSemanas: Transacao[] = [];
-
-            for (let i = 0; i <= transacao.quantidade_repeticao; i++) {
-              
-              let newDate: any = new Date(transacao.data);
-              newDate = newDate.setDate(newDate.getDate() + (7 * i));
-  
-              const newTransction: Transacao = { 
-                ...transacao,
-                status: new Date(newDate) <= new Date() ? 'Concluído' : 'Pendente',
-                data: new Date(newDate).toISOString(),
-                ano: new Date(newDate).getFullYear(),
-                mes: new Date(newDate).getMonth()
-              };
-              
-              transacoesRepetidasSemanas.push(newTransction)
-            }
-
-            transacoesRepetidasSemanas = transacoesRepetidasSemanas.filter(transacaoRepetida => transacaoRepetida.ano == this.currentYear && transacaoRepetida.mes == this.currentMonth );
-            allTransactions.push(...transacoesRepetidasSemanas);
-
-            break;
-  
-          case "meses":
-            let transacoesRepetidas: Transacao[] = [];
-
-            for (let i = 0; i <= transacao.quantidade_repeticao; i++) {
-              let newDate: any = new Date(transacao.data);
-              newDate = newDate.setMonth(newDate.getMonth() + i);
-
-              const novaTransacao = {
-                ...transacao,
-                data: new Date(newDate).toISOString(),
-                ano: new Date(newDate).getFullYear(),
-                mes: new Date(newDate).getMonth()
-              };
-
-              transacoesRepetidas.push(novaTransacao)
-            }
-
-            transacoesRepetidas = transacoesRepetidas.filter(transacaoRepetida => transacaoRepetida.ano == this.currentYear && transacaoRepetida.mes == this.currentMonth );
-
-            allTransactions.push(...transacoesRepetidas)
-
-          break;
-        }
-
-        return;
-      }
-
-      if(transacao.transacao_fixa) {
-
-        let newDate: any = new Date(transacao.data);
-        const currentDate = new Date(this.currentYear, this.currentMonth, new Date().getDate());
-
-        if(currentDate >= newDate) {
-          newDate = newDate.setFullYear(this.currentYear, this.currentMonth, newDate.getDate())
-
-          const novaTransacao = {
-            ...transacao,
-            data: new Date(newDate).toISOString(),
-            ano: new Date(newDate).getFullYear(),
-            mes: new Date(newDate).getMonth()
-          };
-  
-          allTransactions.push(novaTransacao)
-        }
+        });
       }
     });
-  
-    return allTransactions;
-  }
 
-  private updatePaginatedList(pageIndex: number, pageSize: number) {
-    this.startIndex = pageIndex * pageSize;
-    this.endIndex = this.startIndex + pageSize;
-    this.listaTransacoes = this.todasTransacoes.slice(this.startIndex, this.endIndex);
   }
 }

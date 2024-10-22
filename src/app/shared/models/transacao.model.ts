@@ -1,4 +1,7 @@
 export interface Transacao {
+    id: string;
+    accountId: string;
+    uniqueId: string;
     status: string;
     tipo_transacao: string;
     preco: number;

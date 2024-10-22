@@ -48,21 +48,26 @@
     ></transacao-datepicker>
 
     <div class="receitas_table">
-      <table *ngIf="listaTransacoes.length > 0; else noOneTransactionInThisMonth">
+      <table *ngIf="todasTransacoes.length > 0; else noOneTransactionInThisMonth">
         <tr>
           <th>Status</th>
           <th>Data</th>
           <th>Preço</th>
           <th>Descrição</th>
           <th>Categoria</th>
+          <th class="botoes_acao">Ações</th>
         </tr>
 
-        <tr *ngFor="let transacao of listaTransacoes">
+        <tr *ngFor="let transacao of todasTransacoes">
           <td>{{ transacao.status }}</td>
           <td>{{ transacao.data | date : 'dd/MM/yyyy' }}</td>
           <td>{{ transacao.preco | currency: 'BRL' }}</td>
           <td>{{ transacao.descricao }}</td>
           <td>{{ transacao.categoria }}</td>
+          <td class="botoes_acao">
+            <i class="fas fa-pen" title="Editar transação"></i>
+            <i class="fas fa-trash-alt" title="Remover transação"></i>
+          </td>
         </tr>
       </table>
 
@@ -75,7 +80,7 @@
       </ng-template>
       
       <mat-paginator 
-        [length]="todasTransacoes.length" 
+        [length]="totalCount" 
         [pageSize]="pageSize"
         [pageSizeOptions]="[5, 10, 15, 20]" 
         (page)="onPageChange($event)">

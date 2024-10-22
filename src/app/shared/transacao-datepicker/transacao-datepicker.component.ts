@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { IDate } from '../interface/date.interface';
+import { IDate } from '../models/date.interface';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Moment } from 'moment';
 import { DateAdapter, MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material/core';
