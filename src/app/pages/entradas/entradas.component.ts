@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { ReceitasModalComponent } from './receitas-modal/receitas-modal.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -56,11 +56,32 @@ export class EntradasComponent extends OnDestroyService implements OnInit {
     });
   }
 
+  editTransaction(transacao: Transacao) {
+    this.dialog.open(ReceitasModalComponent, {
+      width: '50%',
+      height: '90%',
+      data: transacao
+    });
+
+  }
+
+  removeTransaction(transacao: Transacao) {
+    this._transactionService.deleteTransaction(transacao);
+    this.getFinancialIncomeByDate(this.currentYear, this.currentMonth, String(this.user?.id), null);
+
+    if(this.todasTransacoes.length == 0) {
+      this.paginator.previousPage();
+    }
+  }
+
   getFinancialIncomeByDate(year: number, month: number, accountId: string, lastVisibleItem: any) {
     this._transactionService.getFinancialIncomeTransactions(year, month, this.pageSize, accountId, lastVisibleItem).pipe(takeUntil(this.destroy$)).subscribe((data) => {
       this.todasTransacoes = data.transacoes;
       this.lastVisibleItem = data.lastItem;
-      this.totalCount = data.total;
+      
+      this._transactionService.getTotalCount(this.currentMonth, this.currentYear).then(x => {
+        this.totalCount = x;
+      });
 
       this.totalPerMonth = this.todasTransacoes.reduce((acc: number, cur: Transacao) => acc + cur.preco, 0);
       this.totalConcludedPerMonth = this.todasTransacoes

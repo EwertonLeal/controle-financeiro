@@ -65,8 +65,8 @@
           <td>{{ transacao.descricao }}</td>
           <td>{{ transacao.categoria }}</td>
           <td class="botoes_acao">
-            <i class="fas fa-pen" title="Editar transação"></i>
-            <i class="fas fa-trash-alt" title="Remover transação"></i>
+            <i class="fas fa-pen" title="Editar transação" (click)="editTransaction(transacao)"></i>
+            <i class="fas fa-trash-alt" title="Remover transação" (click)="removeTransaction(transacao)"></i>
           </td>
         </tr>
       </table>

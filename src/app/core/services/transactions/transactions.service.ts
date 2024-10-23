@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { combineLatest, map, Observable, tap } from 'rxjs';
+import { combineLatest, map, Observable, takeUntil, tap } from 'rxjs';
 import { Transacao } from 'src/app/shared/models/transacao.model';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { AngularFirestore, DocumentChangeAction } from '@angular/fire/compat/firestore';
@@ -25,6 +25,28 @@ export class TransactionsService extends OnDestroyService {
     this.fireStore.collection(this.dbPath).doc().set(transacao);
   }
 
+  updateTransaction(transacao: Transacao) {
+    this.fireStore.collection(this.dbPath, ref => ref.where('uniqueId', '==', transacao.uniqueId))
+    .get().pipe(takeUntil(this.destroy$)).subscribe(querySnapshot => {
+      querySnapshot.forEach(doc => {
+        doc.ref.update(transacao)
+          .then(() => console.log('Documento atualizado com sucesso'))
+          .catch(error => console.error('Erro ao atualizar documento:', error))
+      })
+    })
+  }
+
+  deleteTransaction(transacao: Transacao) {
+    this.fireStore.collection(this.dbPath, ref => ref.where('uniqueId', '==', transacao.uniqueId))
+    .get().subscribe(querySnapshot => {
+      querySnapshot.forEach(doc => {
+        doc.ref.delete()
+          .then(() => console.log('Documento deletado com sucesso'))
+          .catch(error => console.error('Erro ao deletar documento:', error));
+      });
+    });
+  }
+
   getFinancialIncomeTransactions(ano: number, mes: number, itemsPerPage: number, accountId: string, lastVisibleItem: any): Observable<any> {
     const query = this.fireStore.collection(this.dbPath, ref => {
       let queryRef = ref
@@ -47,20 +69,17 @@ export class TransactionsService extends OnDestroyService {
         map((result: DocumentChangeAction<unknown>[]) => result.map(x => x.payload)
       ),
       map(payloads => {
-        const transacoes: Transacao[] = payloads.map(payload => payload.doc.data() as Transacao);
-        const lastItem =  payloads[payloads.length - 1].doc;
 
+        const transacoes: Transacao[] = payloads.length > 0 ? payloads.map(payload => payload.doc.data() as Transacao) : [];
+        const lastItem =  payloads.length > 0 ? payloads[payloads.length - 1].doc : null;
         return {
           transacoes,
           lastItem
         }
       }),
-    ),
-
-    this.getTotalCount(),
-
+    )
     ]).pipe(
-      map(([{transacoes, lastItem}, total]) => ({ transacoes, lastItem,  total }))
+      map(([{transacoes, lastItem}]) => ({ transacoes, lastItem }))
     );
 
   }
@@ -83,9 +102,19 @@ export class TransactionsService extends OnDestroyService {
     );
   }
 
-  getTotalCount(): Observable<number> {
-    return this.fireStore.collection(this.dbPath).get().pipe(
-      map(snapshot => snapshot.size)
-    );
+  async getTotalCount(mes: number, ano: number): Promise<number> {
+    const snapshot = await this.fireStore.collection(this.dbPath, ref => {
+      const queryRef = ref
+        .where('ano', '==', ano)
+        .where('mes', '==', mes)
+        
+        return queryRef;
+    }).get().toPromise();
+    
+    if(snapshot) {
+      return snapshot.size;
+    }
+
+    return 0
   }
 }

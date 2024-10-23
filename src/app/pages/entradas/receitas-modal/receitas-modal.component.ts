@@ -1,9 +1,9 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Inject, inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { map, Observable, startWith } from 'rxjs';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import { Intervalo } from 'src/app/shared/models/intervalo.model';
@@ -39,7 +39,9 @@ export class ReceitasModalComponent implements OnInit {
     public dialogRef: MatDialogRef<ReceitasModalComponent>,
     private fb: FormBuilder,
     private _transactionService: TransactionsService,
-    private _authService: AuthService
+    private _authService: AuthService,
+    @Inject(MAT_DIALOG_DATA) public _transacao: Transacao
+
   ) {
     this.filteredCategorys = this.categoryCtrl.valueChanges.pipe(
       startWith(null),
@@ -64,14 +66,20 @@ export class ReceitasModalComponent implements OnInit {
     ];
 
     this.receita_form = this.fb.group({
-      valor_receita: ['', Validators.required],
-      data_receita: ['', Validators.required],
-      descricao_receita: [''],
-      tipo_receita: [this.selectedCategory[0], Validators.required],
-      receita_fixa: [false],
-      repetir_receita: [false],
-      quantidade_receita: [{ value: '', disabled: true }],
-      intervalo_receita: [{ value: '', disabled: true }]
+      valor_receita: [ this._transacao ? this._transacao.preco.toString() : '', Validators.required],
+      data_receita: [ this._transacao ? new Date(this._transacao.data) : new Date(), Validators.required],
+      descricao_receita: [ this._transacao ? this._transacao.descricao : '' ],
+      tipo_receita: [ this._transacao ? this._transacao.categoria : this.selectedCategory[0], Validators.required],
+      receita_fixa: [ this._transacao ? this._transacao.transacao_fixa : false],
+      repetir_receita: [ this._transacao ? this._transacao.transacao_repetida : false],
+      quantidade_receita: [
+        this._transacao ? { value: this._transacao.quantidade_repeticao, disabled: true } :
+        { value: '', disabled: true }
+      ],
+      intervalo_receita: [
+        this._transacao ? { value: this._transacao.intervalo, disabled: true } :
+        { value: '', disabled: true }
+      ]
     });
 
     this.receita_form.get('repetir_receita')?.valueChanges.subscribe((isRepetirReceita: boolean) => {
@@ -139,13 +147,14 @@ export class ReceitasModalComponent implements OnInit {
   }
 
   criarTransacao() {
+
     const receita: Transacao = {
-      id: uuidv4(),
+      id: this._transacao ? this._transacao.id : uuidv4(),
       accountId: String(this.user?.id),
-      uniqueId: uuidv4(),
+      uniqueId: this._transacao ? this._transacao.uniqueId : uuidv4(),
       status: new Date(this.receita_form.get('data_receita')?.value) <= new Date() ? 'Concluído' : 'Pendente',
       tipo_transacao: "receita",
-      preco: this.receita_form.get('valor_receita')?.value,
+      preco: Number(this.receita_form.get('valor_receita')?.value),
       data: new Date(this.receita_form.get('data_receita')?.value).toISOString(),
       ano: new Date(this.receita_form.get('data_receita')?.value).getFullYear(),
       mes: new Date(this.receita_form.get('data_receita')?.value).getMonth(),
@@ -166,17 +175,24 @@ export class ReceitasModalComponent implements OnInit {
             let newDate: any = new Date(receita.data);
             newDate = newDate.setDate(newDate.getDate() + i);
 
-            const newTransction: Transacao = { 
-              ...receita,
-              uniqueId: uuidv4(),
-              descricao: receita.descricao + `[${i+1} / ${receita.quantidade_repeticao}]`,
-              status: new Date(newDate) <= new Date() ? 'Concluído' : 'Pendente',
-              data: new Date(newDate).toISOString(),
-              ano: new Date(newDate).getFullYear(),
-              mes: new Date(newDate).getMonth()
-            };
+            if( i == 0 && this._transacao) {
+              receita.descricao + `[${i+1} / ${receita.quantidade_repeticao}]`
+              this._transactionService.updateTransaction(receita);
+            } else {
+              const newTransction: Transacao = { 
+                ...receita,
+                uniqueId: uuidv4(),
+                quantidade_repeticao: 0,
+                descricao: receita.descricao + `[${i+1} / ${receita.quantidade_repeticao}]`,
+                status: new Date(newDate) <= new Date() ? 'Concluído' : 'Pendente',
+                data: new Date(newDate).toISOString(),
+                ano: new Date(newDate).getFullYear(),
+                mes: new Date(newDate).getMonth()
+              };
 
-            this._transactionService.createTransaction(newTransction);
+              this._transactionService.createTransaction(newTransction);
+            }
+
           }
 
           break;
@@ -187,16 +203,23 @@ export class ReceitasModalComponent implements OnInit {
             let newDate: any = new Date(receita.data);
             newDate = newDate.setDate(newDate.getDate() + (7 * i));
 
-            const newTransction: Transacao = { 
-              ...receita,
-              uniqueId: uuidv4(),
-              status: new Date(newDate) <= new Date() ? 'Concluído' : 'Pendente',
-              data: new Date(newDate).toISOString(),
-              ano: new Date(newDate).getFullYear(),
-              mes: new Date(newDate).getMonth()
-            };
-            
-            this._transactionService.createTransaction(newTransction);
+            if( i == 0 && this._transacao) {
+              receita.descricao + `[${i+1} / ${receita.quantidade_repeticao}]`
+              this._transactionService.updateTransaction(receita);
+            } else {
+              const newTransction: Transacao = { 
+                ...receita,
+                uniqueId: uuidv4(),
+                quantidade_repeticao: 0,
+                status: new Date(newDate) <= new Date() ? 'Concluído' : 'Pendente',
+                data: new Date(newDate).toISOString(),
+                ano: new Date(newDate).getFullYear(),
+                mes: new Date(newDate).getMonth()
+              };
+              
+              this._transactionService.createTransaction(newTransction);
+            }
+
           }
           break;
 
@@ -205,25 +228,33 @@ export class ReceitasModalComponent implements OnInit {
             let newDate: any = new Date(receita.data);
             newDate = newDate.setMonth(newDate.getMonth() + i);
 
-            const newTransction = {
-              ...receita,
-              uniqueId: uuidv4(),
-              status: new Date(newDate) <= new Date() ? 'Concluído' : 'Pendente',
-              data: new Date(newDate).toISOString(),
-              ano: new Date(newDate).getFullYear(),
-              mes: new Date(newDate).getMonth()
-            };
-
-            this._transactionService.createTransaction(newTransction);
+            if( i == 0 && this._transacao) {
+              receita.descricao + `[${i+1} / ${receita.quantidade_repeticao}]`
+              this._transactionService.updateTransaction(receita);
+            } else {
+              const newTransction = {
+                ...receita,
+                uniqueId: uuidv4(),
+                status: new Date(newDate) <= new Date() ? 'Concluído' : 'Pendente',
+                data: new Date(newDate).toISOString(),
+                ano: new Date(newDate).getFullYear(),
+                mes: new Date(newDate).getMonth()
+              };
+  
+              this._transactionService.createTransaction(newTransction);
+            }
           }
         break;
       }
-
-    } else {
-      this._transactionService.createTransaction(receita);
-
+      return;
     }
 
+    if(this._transacao) {
+      this._transactionService.updateTransaction(receita);
+      return;
+    }
+    
+    this._transactionService.createTransaction(receita);
   }
 
 }
