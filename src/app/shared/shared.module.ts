@@ -5,7 +5,6 @@ import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { RouterModule } from '@angular/router';
 import { MaterialModule } from './material/material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MonthDatepickerComponent } from './month-datepicker/month-datepicker.component';
 
 
 @NgModule({
@@ -18,8 +17,7 @@ import { MonthDatepickerComponent } from './month-datepicker/month-datepicker.co
     ReactiveFormsModule,
     CommonModule,
     RouterModule,
-    MaterialModule,
-    MonthDatepickerComponent
+    MaterialModule
   ],
   exports: [
     BannerComponent,

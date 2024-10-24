@@ -84,6 +84,12 @@
     }
 }
 
+.month_datepicker_container {
+    position: absolute;
+    top: 43px;
+    left: calc(100% - 750px);
+}
+
 ::ng-deep {
     main {
         background-color: #FAFCFF !important;

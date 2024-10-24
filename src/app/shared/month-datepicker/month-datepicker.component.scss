@@ -26,6 +26,50 @@ i {
     position: absolute;
 }
 
-::ng-deep .mat-calendar-header {
-    display: none !important;
+::ng-deep  {
+    .mat-calendar-header {
+
+        padding: 0 !important;
+
+        .mat-calendar-controls {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            background: #1f7cd3 !important;
+        }
+
+        .mat-calendar-spacer {
+            display: none !important;
+        }
+
+        .mat-calendar-previous-button,
+        .mat-calendar-next-button {
+            color: #ffffff !important;
+            opacity: 1 !important;
+            transition: .2s ease-in-out;
+        }
+
+        .mat-calendar-previous-button:hover,
+        .mat-calendar-next-button:hover {
+            transform: scale(1.2);
+        }
+
+        button:first-child {
+            display: none !important;
+        }
+    }
+
+    .mat-calendar-body-label {
+        position: absolute !important;
+        top: 0 !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        color: #ffffff !important;
+    }
+
+    .mat-datepicker-content .mat-calendar {
+        height: 200px !important;
+    }
 }
