@@ -19,6 +19,10 @@ const routes: Routes = [
     loadChildren: () => import('./pages/entradas/entradas.module').then(e => e.EntradasModule)
   },
   {
+    path: 'saidas',
+    loadChildren: () => import('./pages/saidas/saidas.module').then(e => e.SaidasModule)
+  },
+  {
     path: '',
     redirectTo: 'login',
     pathMatch: 'full'

@@ -1,23 +1,23 @@
-import { Component, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { ReceitasModalComponent } from './receitas-modal/receitas-modal.component';
-import { MatDialog } from '@angular/material/dialog';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { DateAdapter } from '@angular/material/core';
-import { TransactionsService } from 'src/app/core/services/transactions/transactions.service';
-import { Transacao } from 'src/app/shared/models/transacao.model';
-import { IDate } from 'src/app/shared/models/date.interface';
+import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { takeUntil } from 'rxjs';
+import { AuthService } from 'src/app/core/services/auth/auth.service';
+import { TransactionsService } from 'src/app/core/services/transactions/transactions.service';
+import { IDate } from 'src/app/shared/models/date.interface';
+import { Transacao } from 'src/app/shared/models/transacao.model';
+import { IUser } from 'src/app/shared/models/user.model';
 import { OnDestroyService } from 'src/app/shared/service/onDestroy/on-destroy.service';
 import { v4 as uuidv4 } from 'uuid';
-import { IUser } from 'src/app/shared/models/user.model';
-import { AuthService } from 'src/app/core/services/auth/auth.service';
+import { SaidasModalComponent } from './saidas-modal/saidas-modal.component';
 
 @Component({
-  selector: 'app-entradas',
-  templateUrl: './entradas.component.html',
-  styleUrls: ['./entradas.component.scss']
+  selector: 'app-saidas',
+  templateUrl: './saidas.component.html',
+  styleUrls: ['./saidas.component.scss']
 })
-export class EntradasComponent extends OnDestroyService implements OnInit {
+export class SaidasComponent extends OnDestroyService implements OnInit {
   currentYear: number = new Date().getFullYear();
   currentMonth: number = new Date().getMonth();
   listaTransacoes: Transacao[] = [];
@@ -46,18 +46,18 @@ export class EntradasComponent extends OnDestroyService implements OnInit {
 
   ngOnInit(): void {
     this.dateAdapter.setLocale('pt-br');
-    this.getFinancialIncomeByDate(this.currentYear, this.currentMonth, String(this.user?.id), "receita", null);
+    this.getFinancialIncomeByDate(this.currentYear, this.currentMonth, String(this.user?.id), "saida", null);
   }
 
   openDialog(): void {
-    this.dialog.open(ReceitasModalComponent, {
+    this.dialog.open(SaidasModalComponent, {
       width: '50%',
       height: '90%'
     });
   }
 
   editTransaction(transacao: Transacao) {
-    this.dialog.open(ReceitasModalComponent, {
+    this.dialog.open(SaidasModalComponent, {
       width: '50%',
       height: '90%',
       data: transacao
@@ -67,7 +67,7 @@ export class EntradasComponent extends OnDestroyService implements OnInit {
 
   removeTransaction(transacao: Transacao) {
     this._transactionService.deleteTransaction(transacao);
-    this.getFinancialIncomeByDate(this.currentYear, this.currentMonth, String(this.user?.id), "receita", null);
+    this.getFinancialIncomeByDate(this.currentYear, this.currentMonth, String(this.user?.id), "saida", null);
 
     if(this.todasTransacoes.length == 0) {
       this.paginator.previousPage();
@@ -97,7 +97,7 @@ export class EntradasComponent extends OnDestroyService implements OnInit {
     this.currentYear = newYear;
 
     this.gerarTransacoesFixas(this.currentMonth, this.currentYear);
-    this.getFinancialIncomeByDate(this.currentYear, this.currentMonth, String(this.user?.id), "receita", null);
+    this.getFinancialIncomeByDate(this.currentYear, this.currentMonth, String(this.user?.id), "saida", null);
 
     if (this.paginator) {
       this.paginator.firstPage();
@@ -110,7 +110,7 @@ export class EntradasComponent extends OnDestroyService implements OnInit {
     this.currentMonth = newMonth.index;
     
     this.gerarTransacoesFixas(this.currentMonth, this.currentYear);
-    this.getFinancialIncomeByDate(this.currentYear, this.currentMonth, String(this.user?.id), "receita", null);
+    this.getFinancialIncomeByDate(this.currentYear, this.currentMonth, String(this.user?.id), "saida", null);
     
     if (this.paginator) {
       this.paginator.firstPage();
@@ -126,7 +126,7 @@ export class EntradasComponent extends OnDestroyService implements OnInit {
     }
 
     this.gerarTransacoesFixas(this.currentMonth, this.currentYear);
-    this.getFinancialIncomeByDate(this.currentYear, this.currentMonth, String(this.user?.id), "receita", null);
+    this.getFinancialIncomeByDate(this.currentYear, this.currentMonth, String(this.user?.id), "saida", null);
 
     if (this.paginator) {
       this.paginator.firstPage();
@@ -142,7 +142,7 @@ export class EntradasComponent extends OnDestroyService implements OnInit {
       this.currentYear = this.currentYear - 1;
     }
 
-    this.getFinancialIncomeByDate(this.currentYear, this.currentMonth, String(this.user?.id), "receita", null);
+    this.getFinancialIncomeByDate(this.currentYear, this.currentMonth, String(this.user?.id), "saida", null);
 
     if (this.paginator) {
       this.paginator.firstPage();
@@ -155,11 +155,11 @@ export class EntradasComponent extends OnDestroyService implements OnInit {
 
     if(this.pageIndex == 0) {
       this.lastVisibleItem = null;
-      this.getFinancialIncomeByDate(this.currentYear, this.currentMonth, String(this.user?.id), "receita", null);
+      this.getFinancialIncomeByDate(this.currentYear, this.currentMonth, String(this.user?.id), "saida", null);
       return;
     }
 
-    this.getFinancialIncomeByDate(this.currentYear, this.currentMonth, String(this.user?.id), "receita", this.lastVisibleItem);
+    this.getFinancialIncomeByDate(this.currentYear, this.currentMonth, String(this.user?.id), "saida", this.lastVisibleItem);
 
   }
 

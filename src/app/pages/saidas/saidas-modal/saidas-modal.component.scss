@@ -1,0 +1,70 @@
+.btn_modal {
+    background-color: #af5050;
+    color: #ffffff;
+    border: none;
+    outline: none;
+    padding: .5rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: .3s;
+}
+
+.btn_modal:hover {
+    background-color: #800000;
+    transform: scale(1.02);
+}
+
+.btn_modal:disabled {
+    opacity: .5;
+    pointer-events: none;
+}
+
+.btn_modal_cancel {
+    background-color: #af5050;
+    color: #ffffff;
+    border: none;
+    outline: none;
+    padding: .5rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: .3s;
+    margin-right: 10px;
+}
+
+.btn_modal_cancel:hover {
+    background-color: #800000;
+    transform: scale(1.02);
+}
+
+.repeat_container {
+    display: grid;
+    grid-template: "qtd_field intervalo_field";
+    grid-gap: 1rem;
+}
+
+.qtd_field {
+    grid-area: qtd_field;
+}
+
+.intervalo_field {
+    grid-area: intervalo_field;
+}
+
+.saida_form {
+    padding: 1rem 0; 
+    display: grid; 
+    grid-gap: 1rem;
+}
+
+.container_disabled {
+    opacity: .5;
+    pointer-events: none;
+}
+
+::ng-deep {
+    .mdc-evolution-chip__text-label {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+}

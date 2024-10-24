@@ -13,7 +13,7 @@
     justify-content: space-between;
 }
 
-.receitas_container,
+.saidas_container,
 .total_container {
     background-color: #fff;
     padding: 20px;
@@ -33,7 +33,7 @@
     
         h2 {
             margin: 0;
-            color: #008000;
+            color: #800000;
         }
     
         .total_container_icon {
@@ -42,7 +42,7 @@
             justify-content: center;
             
             color: #fff;
-            background-color: #008000;
+            background-color: #800000;
             width: 50px;
             height: 50px;
             border-radius: 30px;
@@ -57,7 +57,7 @@
 }
 
 button {
-    background-color: #008000;
+    background-color: #800000;
     color: #ffffff;
     border: none;
     outline: none;
@@ -73,49 +73,7 @@ button:hover, button.active {
     transform: scale(1.02);
 }
 
-.transacoes_datepicker_container  {
-
-    div {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 20px;
-    
-        i {
-            color: #008000;
-            cursor: pointer;
-            transition: .2s;
-        }
-    
-        i:hover {
-            transform: scale(1.02);
-        }
-    }
-
-    .btn_ano,
-    .btn_mes {
-        border-radius: 30px;
-        border: 1px solid #008000;
-        color: #008000;
-        background-color: transparent;
-        font-weight: 400;
-    }
-
-
-    .btn_row {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        margin-top: 1rem;        
-
-        .btn_mes {
-            padding: 5px 15px;
-        }
-    }
-
-}
-
-.receitas_table {
+.saidas_table {
     margin-top: 40px;
 
     table {
@@ -164,5 +122,19 @@ button:hover, button.active {
 ::ng-deep {
     .my-custom-tooltip .mdc-tooltip__surface {
         max-width: 100% !important;
+    }
+
+    .saidas_container transacao-datepicker {
+        .transacoes_datepicker_container {
+            .btn_ano, .btn_mes, i {
+                color: #800000 !important;
+                border-color: #800000 !important;
+            }
+
+            .btn_mes.active {
+                background-color: #800000 !important;
+                color: #fff !important;
+            }
+        }
     }
 }

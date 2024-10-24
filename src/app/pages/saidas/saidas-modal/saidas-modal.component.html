@@ -1,0 +1,95 @@
+<h1 mat-dialog-title>Cadastrar saídas</h1>
+
+<div mat-dialog-content>
+    <form class="saida_form" [formGroup]="saida_form">
+        <mat-form-field appearance="outline" class="value_field">
+            <mat-icon matPrefix fontIcon="attach_money"></mat-icon>
+            <input formControlName="valor_saida" matInput type="number" value="0.00" min="0" [step]="0.01">
+            <mat-hint align="start"><strong>O valor deve ser maior do que zero</strong> </mat-hint>
+            <mat-error>
+              Campo obrigatório
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="date_field">
+          <mat-label>Data</mat-label>
+            <input formControlName="data_saida" matInput [matDatepicker]="dp3">
+            <mat-datepicker-toggle matIconSuffix [for]="dp3"></mat-datepicker-toggle>
+            <mat-datepicker #dp3 disabled="false"></mat-datepicker>
+            <mat-error>
+              Campo obrigatório
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="description_field">
+            <mat-label>Descrição</mat-label>
+            <input formControlName="descricao_saida" matInput type="text" placeholder="Ex. Salário" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="type_field">
+            <mat-label>Categoria de saidas</mat-label>
+            <mat-chip-grid #chipGrid>
+              <mat-chip-row *ngFor="let category of selectedCategory; let i = index" (removed)="remove()">
+                {{category}}
+                <button matChipRemove [attr.aria-label]="'remove ' + category">
+                  <mat-icon>cancel</mat-icon>
+                </button>
+              </mat-chip-row>
+            </mat-chip-grid>
+
+            <input formControlName="tipo_saida" placeholder="Adicionar um tipo de saida..." #categoryInput [formControl]="categoryCtrl"
+              [matChipInputFor]="chipGrid" [matAutocomplete]="auto"
+              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+              (matChipInputTokenEnd)="add($event)"/>
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+              <mat-option *ngFor="let category of filteredCategorys | async" [value]="category">
+                {{category}}
+              </mat-option>
+            </mat-autocomplete>
+            <mat-error>
+              Campo obrigatório
+            </mat-error>
+        </mat-form-field>
+
+        <mat-slide-toggle
+        *ngIf="!_transacao || (!_transacao.transacao_fixa && !_transacao.transacao_repetida)"
+         formControlName="saida_fixa" 
+         (change)="onSaidaFixa($event)"
+        >
+          Saida fixa ?
+        </mat-slide-toggle>
+
+        <mat-slide-toggle 
+        *ngIf="!_transacao || (!_transacao.transacao_fixa && !_transacao.transacao_repetida)"
+          formControlName="repetir_saida" 
+          (change)="onRepetirSaida($event)"
+        >
+          Repetir saida
+        </mat-slide-toggle>
+
+        <div class="repeat_container" *ngIf="!_transacao || (!_transacao.transacao_fixa && !_transacao.transacao_repetida)">
+          <mat-form-field appearance="outline" class="qtd_field">
+            <input formControlName="quantidade_saida" matInput type="number" value="1" min="1" [step]="1">
+            <small matSuffix>vezes</small>
+            <mat-error>
+              Campo obrigatório
+            </mat-error>
+          </mat-form-field>
+  
+          <mat-form-field appearance="outline" class="intervalo_field">
+            <mat-label>Intervalo</mat-label>
+            <mat-select name="interval" formControlName="intervalo_saida">
+              <mat-option *ngFor="let interval of intervals" [value]="interval.value">
+                {{interval.viewValue}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+    </form>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button class="btn_modal_cancel" mat-dialog-close>Cancelar</button>
+  <button [disabled]="!saida_form.valid" (click)="criarTransacao()" class="btn_modal" [mat-dialog-close]="true" cdkFocusInitial>Salvar</button>
+</div>

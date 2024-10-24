@@ -47,12 +47,13 @@ export class TransactionsService extends OnDestroyService {
     });
   }
 
-  getFinancialIncomeTransactions(ano: number, mes: number, itemsPerPage: number, accountId: string, lastVisibleItem: any): Observable<any> {
+  getFinancialIncomeTransactions(ano: number, mes: number, itemsPerPage: number, accountId: string, type: string, lastVisibleItem: any): Observable<any> {
     const query = this.fireStore.collection(this.dbPath, ref => {
       let queryRef = ref
         .where('ano', '==', ano)
         .where('mes', '==', mes)
         .where('accountId', '==', accountId)
+        .where('tipo_transacao', '==', type)
         .orderBy('data', 'asc')
         .limit(itemsPerPage);
   
@@ -102,11 +103,12 @@ export class TransactionsService extends OnDestroyService {
     );
   }
 
-  async getTotalCount(mes: number, ano: number): Promise<number> {
+  async getTotalCount(mes: number, ano: number, type: string): Promise<number> {
     const snapshot = await this.fireStore.collection(this.dbPath, ref => {
       const queryRef = ref
         .where('ano', '==', ano)
         .where('mes', '==', mes)
+        .where('tipo_transacao', '==', type)
         
         return queryRef;
     }).get().toPromise();
