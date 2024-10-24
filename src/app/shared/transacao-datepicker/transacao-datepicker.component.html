@@ -8,12 +8,11 @@
     </mat-form-field>
 
     <mat-form-field class="dp_year">
-        <mat-label>Selecione o Ano</mat-label>
         <input matInput [matDatepicker]="picker" readonly>
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker startView="multi-year"  panelClass="year-picker">
         </mat-datepicker>
-      </mat-form-field>
+    </mat-form-field>
 
     <div>
         <i class="fas fa-chevron-left fa-2x" (click)="goToThePreviousMonth()"></i>

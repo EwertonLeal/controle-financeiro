@@ -1,0 +1,31 @@
+.month_datepicker_container {
+    padding: 12px;
+    border: 1px solid #1f7cd3;
+    border-radius: 30px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    color: #1f7cd3;
+    width: 150px;
+    cursor: pointer;
+    transition: .3s ease-in-out;
+}
+
+.month_datepicker_container:hover {
+    transform: scale(1.03);
+}
+
+i {
+    margin-left: 5px;
+}
+
+::ng-deep mat-form-field {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    position: absolute;
+}
+
+::ng-deep .mat-calendar-header {
+    display: none !important;
+}
