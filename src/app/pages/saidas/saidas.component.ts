@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { DateAdapter } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { takeUntil } from 'rxjs';
+import { take, takeUntil } from 'rxjs';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
 import { TransactionsService } from 'src/app/core/services/transactions/transactions.service';
 import { IDate } from 'src/app/shared/models/date.interface';
@@ -46,7 +46,7 @@ export class SaidasComponent extends OnDestroyService implements OnInit {
 
   ngOnInit(): void {
     this.dateAdapter.setLocale('pt-br');
-    this.getFinancialIncomeByDate(this.currentYear, this.currentMonth, String(this.user?.id), "saida", null);
+    this.getFinancialIncomeByDate(this.currentYear, this.currentMonth, String(this.user?.id), "saída", null);
   }
 
   openDialog(): void {
@@ -66,8 +66,14 @@ export class SaidasComponent extends OnDestroyService implements OnInit {
   }
 
   removeTransaction(transacao: Transacao) {
-    this._transactionService.deleteTransaction(transacao);
-    this.getFinancialIncomeByDate(this.currentYear, this.currentMonth, String(this.user?.id), "saida", null);
+    if(transacao.transacao_fixa) {
+      let deletedTransaction: Transacao = {...transacao, ativo: false };
+      this._transactionService.updateTransaction(deletedTransaction);
+    } else {
+      this._transactionService.deleteTransaction(transacao);
+    }
+
+    this.getFinancialIncomeByDate(this.currentYear, this.currentMonth, String(this.user?.id), "saída", null);
 
     if(this.todasTransacoes.length == 0) {
       this.paginator.previousPage();
@@ -96,8 +102,8 @@ export class SaidasComponent extends OnDestroyService implements OnInit {
   changeYear(newYear: number) {
     this.currentYear = newYear;
 
-    this.gerarTransacoesFixas(this.currentMonth, this.currentYear);
-    this.getFinancialIncomeByDate(this.currentYear, this.currentMonth, String(this.user?.id), "saida", null);
+    this._transactionService.generateFixedTransactions("saída", String(this.user?.id), this.currentYear, this.currentMonth);
+    this.getFinancialIncomeByDate(this.currentYear, this.currentMonth, String(this.user?.id), "saída", null);
 
     if (this.paginator) {
       this.paginator.firstPage();
@@ -109,8 +115,8 @@ export class SaidasComponent extends OnDestroyService implements OnInit {
     this.listaTransacoes = [];
     this.currentMonth = newMonth.index;
     
-    this.gerarTransacoesFixas(this.currentMonth, this.currentYear);
-    this.getFinancialIncomeByDate(this.currentYear, this.currentMonth, String(this.user?.id), "saida", null);
+    this._transactionService.generateFixedTransactions("saída", String(this.user?.id), this.currentYear, this.currentMonth);
+    this.getFinancialIncomeByDate(this.currentYear, this.currentMonth, String(this.user?.id), "saída", null);
     
     if (this.paginator) {
       this.paginator.firstPage();
@@ -125,8 +131,8 @@ export class SaidasComponent extends OnDestroyService implements OnInit {
       this.currentYear = this.currentYear + 1;
     }
 
-    this.gerarTransacoesFixas(this.currentMonth, this.currentYear);
-    this.getFinancialIncomeByDate(this.currentYear, this.currentMonth, String(this.user?.id), "saida", null);
+    this._transactionService.generateFixedTransactions("saída", String(this.user?.id), this.currentYear, this.currentMonth);
+    this.getFinancialIncomeByDate(this.currentYear, this.currentMonth, String(this.user?.id), "saída", null);
 
     if (this.paginator) {
       this.paginator.firstPage();
@@ -142,7 +148,7 @@ export class SaidasComponent extends OnDestroyService implements OnInit {
       this.currentYear = this.currentYear - 1;
     }
 
-    this.getFinancialIncomeByDate(this.currentYear, this.currentMonth, String(this.user?.id), "saida", null);
+    this.getFinancialIncomeByDate(this.currentYear, this.currentMonth, String(this.user?.id), "saída", null);
 
     if (this.paginator) {
       this.paginator.firstPage();
@@ -155,44 +161,11 @@ export class SaidasComponent extends OnDestroyService implements OnInit {
 
     if(this.pageIndex == 0) {
       this.lastVisibleItem = null;
-      this.getFinancialIncomeByDate(this.currentYear, this.currentMonth, String(this.user?.id), "saida", null);
+      this.getFinancialIncomeByDate(this.currentYear, this.currentMonth, String(this.user?.id), "saída", null);
       return;
     }
 
-    this.getFinancialIncomeByDate(this.currentYear, this.currentMonth, String(this.user?.id), "saida", this.lastVisibleItem);
-
-  }
-
-  private gerarTransacoesFixas(mes: number, ano: number) {
-    const transacoesFixas = this.todasTransacoes.filter((transacao: Transacao) => transacao.transacao_fixa );
-
-    if(transacoesFixas.length == 0) {
-      return;
-    }
-
-    transacoesFixas.forEach((transacaoFixa: Transacao) => {
-      let newDate: any = new Date(transacaoFixa.data);
-      const currentDate = new Date(this.currentYear, this.currentMonth, new Date().getDate());
-  
-      if(currentDate >= newDate) {
-        newDate = newDate.setFullYear(this.currentYear, this.currentMonth, newDate.getDate())
-
-        this._transactionService.getTransactionsById(transacaoFixa.id, new Date(newDate).getMonth(), new Date(newDate).getFullYear()).pipe(takeUntil(this.destroy$)).subscribe(transacao => {
-          if(transacao.length == 0) {
-            const transacao: Transacao = {
-              ...transacaoFixa,
-              data: new Date(newDate).toISOString(),
-              ano: new Date(newDate).getFullYear(),
-              mes: new Date(newDate).getMonth(),
-              uniqueId: uuidv4()
-            }
-            
-            this._transactionService.createTransaction(transacao);
-          }
-          
-        });
-      }
-    });
+    this.getFinancialIncomeByDate(this.currentYear, this.currentMonth, String(this.user?.id), "saída", this.lastVisibleItem);
 
   }
 }

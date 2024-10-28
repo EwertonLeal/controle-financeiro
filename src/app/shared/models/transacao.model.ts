@@ -1,11 +1,13 @@
 export interface Transacao {
     id: string;
+    ativo: boolean;
     accountId: string;
-    uniqueId: string;
+    parentId: string | null;
     status: string;
     tipo_transacao: string;
     preco: number;
     data: string;
+    dataExclusao?: string;
     ano: number,
     mes: number,
     descricao: string;

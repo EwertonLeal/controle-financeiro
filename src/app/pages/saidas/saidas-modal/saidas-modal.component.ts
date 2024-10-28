@@ -40,7 +40,7 @@ export class SaidasModalComponent implements OnInit {
     private fb: FormBuilder,
     private _transactionService: TransactionsService,
     private _authService: AuthService,
-    @Inject(MAT_DIALOG_DATA) public _transacao: Transacao
+    @Inject(MAT_DIALOG_DATA) public _transacao: Transacao,
 
   ) {
     this.filteredCategorys = this.categoryCtrl.valueChanges.pipe(
@@ -147,11 +147,11 @@ export class SaidasModalComponent implements OnInit {
   }
 
   criarTransacao() {
-
     const saida: Transacao = {
-      id: this._transacao ? this._transacao.id : uuidv4(),
+      id: this._transacao ? this._transacao.id :uuidv4(),
+      ativo: true,
       accountId: String(this.user?.id),
-      uniqueId: this._transacao ? this._transacao.uniqueId : uuidv4(),
+      parentId: this._transacao ? this._transacao.parentId : null,
       status: new Date(this.saida_form.get('data_saida')?.value) <= new Date() ? 'Concluído' : 'Pendente',
       tipo_transacao: "saída",
       preco: Number(this.saida_form.get('valor_saida')?.value),
@@ -181,8 +181,9 @@ export class SaidasModalComponent implements OnInit {
             } else {
               const newTransction: Transacao = { 
                 ...saida,
-                uniqueId: uuidv4(),
-                quantidade_repeticao: 0,
+                id: uuidv4(),
+                parentId: saida.id,
+                transacao_repetida: false,
                 descricao: saida.descricao + `[${i+1} / ${saida.quantidade_repeticao}]`,
                 status: new Date(newDate) <= new Date() ? 'Concluído' : 'Pendente',
                 data: new Date(newDate).toISOString(),
@@ -209,8 +210,9 @@ export class SaidasModalComponent implements OnInit {
             } else {
               const newTransction: Transacao = { 
                 ...saida,
-                uniqueId: uuidv4(),
-                quantidade_repeticao: 0,
+                id: uuidv4(),
+                parentId: saida.id,
+                transacao_repetida: false,
                 status: new Date(newDate) <= new Date() ? 'Concluído' : 'Pendente',
                 data: new Date(newDate).toISOString(),
                 ano: new Date(newDate).getFullYear(),
@@ -232,9 +234,11 @@ export class SaidasModalComponent implements OnInit {
               saida.descricao + `[${i+1} / ${saida.quantidade_repeticao}]`
               this._transactionService.updateTransaction(saida);
             } else {
-              const newTransction = {
+              const newTransction: Transacao = {
                 ...saida,
-                uniqueId: uuidv4(),
+                id: uuidv4(),
+                parentId: saida.id,
+                transacao_repetida: false,
                 status: new Date(newDate) <= new Date() ? 'Concluído' : 'Pendente',
                 data: new Date(newDate).toISOString(),
                 ano: new Date(newDate).getFullYear(),

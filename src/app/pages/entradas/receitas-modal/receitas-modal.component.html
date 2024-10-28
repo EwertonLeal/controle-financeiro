@@ -52,22 +52,22 @@
         </mat-form-field>
 
         <mat-slide-toggle
-        *ngIf="!_transacao || (!_transacao.transacao_fixa && !_transacao.transacao_repetida)"
-         formControlName="receita_fixa" 
+        *ngIf="!_transacao || (_transacao.transacao_fixa === false && _transacao.transacao_repetida === false && _transacao.quantidade_repeticao == 0)"
+        formControlName="receita_fixa" 
          (change)="onReceitaFixa($event)"
         >
           Receita fixa ?
         </mat-slide-toggle>
 
         <mat-slide-toggle 
-        *ngIf="!_transacao || (!_transacao.transacao_fixa && !_transacao.transacao_repetida)"
+        *ngIf="!_transacao || (_transacao.transacao_fixa === false && _transacao.transacao_repetida === false && _transacao.quantidade_repeticao == 0)"
           formControlName="repetir_receita" 
           (change)="onRepetirReceita($event)"
         >
           Repetir receita
         </mat-slide-toggle>
 
-        <div class="repeat_container" *ngIf="!_transacao || (!_transacao.transacao_fixa && !_transacao.transacao_repetida)">
+        <div class="repeat_container" *ngIf="!_transacao || (_transacao.transacao_fixa === false && _transacao.transacao_repetida === false && _transacao.quantidade_repeticao == 0)">
           <mat-form-field appearance="outline" class="qtd_field">
             <input formControlName="quantidade_receita" matInput type="number" value="1" min="1" [step]="1">
             <small matSuffix>vezes</small>

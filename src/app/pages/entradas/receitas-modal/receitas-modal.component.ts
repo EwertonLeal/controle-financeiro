@@ -1,5 +1,5 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { Component, ElementRef, Inject, inject, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Inject, inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
@@ -40,7 +40,8 @@ export class ReceitasModalComponent implements OnInit {
     private fb: FormBuilder,
     private _transactionService: TransactionsService,
     private _authService: AuthService,
-    @Inject(MAT_DIALOG_DATA) public _transacao: Transacao
+    @Inject(MAT_DIALOG_DATA) public _transacao: Transacao,
+    private cd: ChangeDetectorRef
 
   ) {
     this.filteredCategorys = this.categoryCtrl.valueChanges.pipe(
@@ -74,11 +75,11 @@ export class ReceitasModalComponent implements OnInit {
       repetir_receita: [ this._transacao ? this._transacao.transacao_repetida : false],
       quantidade_receita: [
         this._transacao ? { value: this._transacao.quantidade_repeticao, disabled: true } :
-        { value: '', disabled: true }
+        { value: 0, disabled: true }
       ],
       intervalo_receita: [
         this._transacao ? { value: this._transacao.intervalo, disabled: true } :
-        { value: '', disabled: true }
+        { value: this.intervals[0].value, disabled: true }
       ]
     });
 
@@ -147,11 +148,11 @@ export class ReceitasModalComponent implements OnInit {
   }
 
   criarTransacao() {
-
     const receita: Transacao = {
-      id: this._transacao ? this._transacao.id : uuidv4(),
+      id: this._transacao ? this._transacao.id :uuidv4(),
+      ativo: true,
       accountId: String(this.user?.id),
-      uniqueId: this._transacao ? this._transacao.uniqueId : uuidv4(),
+      parentId: this._transacao ? this._transacao.parentId : null,
       status: new Date(this.receita_form.get('data_receita')?.value) <= new Date() ? 'Concluído' : 'Pendente',
       tipo_transacao: "receita",
       preco: Number(this.receita_form.get('valor_receita')?.value),
@@ -166,7 +167,7 @@ export class ReceitasModalComponent implements OnInit {
       intervalo: this.receita_form.get('intervalo_receita')?.value
     }
 
-    if(receita.transacao_repetida) {
+    if(receita.transacao_repetida && receita.quantidade_repeticao != 0) {
       
       switch (receita.intervalo) {
         case "dias":
@@ -181,8 +182,9 @@ export class ReceitasModalComponent implements OnInit {
             } else {
               const newTransction: Transacao = { 
                 ...receita,
-                uniqueId: uuidv4(),
-                quantidade_repeticao: 0,
+                id: uuidv4(),
+                parentId: receita.id,
+                transacao_repetida: false,
                 descricao: receita.descricao + `[${i+1} / ${receita.quantidade_repeticao}]`,
                 status: new Date(newDate) <= new Date() ? 'Concluído' : 'Pendente',
                 data: new Date(newDate).toISOString(),
@@ -209,8 +211,9 @@ export class ReceitasModalComponent implements OnInit {
             } else {
               const newTransction: Transacao = { 
                 ...receita,
-                uniqueId: uuidv4(),
-                quantidade_repeticao: 0,
+                id: uuidv4(),
+                parentId: receita.id,
+                transacao_repetida: false,
                 status: new Date(newDate) <= new Date() ? 'Concluído' : 'Pendente',
                 data: new Date(newDate).toISOString(),
                 ano: new Date(newDate).getFullYear(),
@@ -232,9 +235,11 @@ export class ReceitasModalComponent implements OnInit {
               receita.descricao + `[${i+1} / ${receita.quantidade_repeticao}]`
               this._transactionService.updateTransaction(receita);
             } else {
-              const newTransction = {
+              const newTransction: Transacao = {
                 ...receita,
-                uniqueId: uuidv4(),
+                id: uuidv4(),
+                parentId: receita.id,
+                transacao_repetida: false,
                 status: new Date(newDate) <= new Date() ? 'Concluído' : 'Pendente',
                 data: new Date(newDate).toISOString(),
                 ano: new Date(newDate).getFullYear(),
