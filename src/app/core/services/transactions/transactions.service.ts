@@ -5,6 +5,7 @@ import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { AngularFirestore, DocumentChangeAction } from '@angular/fire/compat/firestore';
 import { OnDestroyService } from 'src/app/shared/service/onDestroy/on-destroy.service';
 import { v4 as uuidv4 } from 'uuid';
+import { GraphData } from 'src/app/shared/models/graphData.model';
 
 @Injectable({
   providedIn: 'root'
@@ -12,36 +13,34 @@ import { v4 as uuidv4 } from 'uuid';
 export class TransactionsService extends OnDestroyService {
 
   private dbPath = 'transacoes';
-  private lastVisible: any = null;
 
   constructor(
-    private db: AngularFireDatabase,
     private fireStore: AngularFirestore
   ) {
     super();
   }
 
-  createTransaction(transacao: Transacao) {
+  public createTransaction(transacao: Transacao) {
     this.fireStore.collection(this.dbPath).doc().set(transacao);
   }
 
-  updateTransaction(transacao: Transacao) {
-    this.fireStore.collection(this.dbPath, ref => ref.where('id', '==', transacao.id))
+  public updateTransaction(transaction: Transacao) {
+    this.fireStore.collection(this.dbPath, ref => ref.where('id', '==', transaction.id))
       .get().pipe(take(1)).subscribe(querySnapshot => {
         if (querySnapshot.empty) {
-          console.error(`Nenhum documento encontrado para o uniqueId: ${transacao.id}`);
+          console.error(`Nenhum documento encontrado para o uniqueId: ${transaction.id}`);
           return;
         }
         
         const docRef = querySnapshot.docs[0].ref;
-        docRef.update(transacao)
+        docRef.update(transaction)
           .then(() => console.log('Documento atualizado com sucesso'))
           .catch(error => console.error('Erro ao atualizar documento:', error));
     });
   }
 
-  deleteTransaction(transacao: Transacao) {
-    this.fireStore.collection(this.dbPath, ref => ref.where('id', '==', transacao.id))
+  public deleteTransaction(transaction: Transacao) {
+    this.fireStore.collection(this.dbPath, ref => ref.where('id', '==', transaction.id))
     .get().subscribe(querySnapshot => {
       querySnapshot.forEach(doc => {
         doc.ref.delete()
@@ -51,11 +50,11 @@ export class TransactionsService extends OnDestroyService {
     });
   }
 
-  getFinancialIncomeTransactions(ano: number, mes: number, itemsPerPage: number, accountId: string, type: string, lastVisibleItem: any): Observable<any> {
+  public getFinancialIncomeTransactions(year: number, month: number, itemsPerPage: number, accountId: string, type: string, lastVisibleItem: any): Observable<any> {
     const query = this.fireStore.collection(this.dbPath, ref => {
       let queryRef = ref
-        .where('ano', '==', ano)
-        .where('mes', '==', mes)
+        .where('ano', '==', year)
+        .where('mes', '==', month)
         .where('accountId', '==', accountId)
         .where('tipo_transacao', '==', type)
         .where('ativo', '==', true)
@@ -90,12 +89,12 @@ export class TransactionsService extends OnDestroyService {
 
   }
 
-  getFixedTransactionByParentId(id: string, mes: number, ano: number) {
+  public getFixedTransactionByParentId(id: string, month: number, year: number) {
     const query = this.fireStore.collection(this.dbPath, ref => {
       let queryRef = ref
         .where('parentId', '==', id)
-        .where('ano', '==', ano)
-        .where('mes', '==', mes)        
+        .where('ano', '==', year)
+        .where('mes', '==', month)        
         .orderBy('data', 'asc');
 
       return queryRef;
@@ -108,11 +107,11 @@ export class TransactionsService extends OnDestroyService {
     );
   }
 
-  async getTotalCount(mes: number, ano: number, type: string): Promise<number> {
+  public async getTotalCount(month: number, year: number, type: string): Promise<number> {
     const snapshot = await this.fireStore.collection(this.dbPath, ref => {
       const queryRef = ref
-        .where('ano', '==', ano)
-        .where('mes', '==', mes)
+        .where('ano', '==', year)
+        .where('mes', '==', month)
         .where('tipo_transacao', '==', type)
         .where('ativo', '==', true)
         
@@ -164,6 +163,25 @@ export class TransactionsService extends OnDestroyService {
     });
   }
 
+  public getAllTransactionsOfAccountByDate(month: number, year: number, accountId: string): Observable<GraphData[]> {
+    const query = this.fireStore.collection(this.dbPath, ref => {
+      return ref
+        .where('accountId', '==', accountId)
+        .where('mes', '==', month)
+        .where('ano', '==', year)
+    }).snapshotChanges();
+
+    return query.pipe(
+      map((change: DocumentChangeAction<unknown>[]) => {
+        return change.map(x => {
+          const docs = x.payload.doc.data() as Transacao;
+          const graphdata: GraphData = { type: docs.tipo_transacao, preco: docs.preco }
+          return graphdata;
+        })
+      })
+    );
+  }
+
   private getAllFixedTransaction(accountId: string, type: string) {
     const query = this.fireStore.collection(this.dbPath, ref => {
       let queryRef = ref
@@ -183,5 +201,4 @@ export class TransactionsService extends OnDestroyService {
     );
     
   }
-
 }

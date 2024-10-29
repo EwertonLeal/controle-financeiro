@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { HomeResolver } from './pages/home/resolver/home.resolver';
 
 const routes: Routes = [
   {
@@ -12,7 +13,8 @@ const routes: Routes = [
   },
   {
     path: 'home',
-    loadChildren: () => import('./pages/home/home.module').then(h => h.HomeModule)
+    loadChildren: () => import('./pages/home/home.module').then(h => h.HomeModule),
+    resolve: { graphData: HomeResolver }
   },
   {
     path: 'entradas',

@@ -1,10 +1,14 @@
 <header>
-    <nav class="navBar">
-        <button routerLink="/home" routerLinkActive="active">home</button>
-        <button routerLink="/entradas" routerLinkActive="active">Cadastrar entradas</button>
-        <button routerLink="/saidas" routerLinkActive="active">Cadastrar saídas</button>
-        <button routerLink="/objetivos" routerLinkActive="active">Cadastrar objetivos</button>
-    </nav>
+    <div class="navbar_container">
+        <nav class="navBar">
+            <button routerLink="/home" routerLinkActive="active">home</button>
+            <button routerLink="/entradas" routerLinkActive="active">Cadastrar entradas</button>
+            <button routerLink="/saidas" routerLinkActive="active">Cadastrar saídas</button>
+            <!-- <button routerLink="/objetivos" routerLinkActive="active">Cadastrar objetivos</button> -->
+        </nav>
+
+        <month-datepicker></month-datepicker>
+    </div>
 
     <div class="user_container">
         <div class="welcome_container">

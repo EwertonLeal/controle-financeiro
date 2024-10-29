@@ -1,10 +1,13 @@
 .home_container {
-    margin-top: 20px;
+    // margin-top: 20px;
     display: grid;
     grid-gap: 20px;
     grid-template:
     "lista_saidas lista_valores"
-    "grafico_gastos lista_valores"
+    // "grafico_gastos lista_valores"
+    ;
+    height: calc(100% - 87px);
+    align-items: center;
 }
 
 .lista_saidas {
@@ -32,19 +35,25 @@
     grid-template: 
     "lista_valores_entrada lista_valores_saida"
     "lista_valores_saldo lista_valores_saldo"
-    "lista_valores_objetivos lista_valores_objetivos"
+    // "lista_valores_objetivos lista_valores_objetivos"
     ;
+    height: 340px;
     
     &_entrada {
         grid-area: lista_valores_entrada;
         background-image: url("../../../assets/images/entrada.png");
-        background-size: 370px 190px;
+        background-size: 390px 190px;
         background-position: center;
         background-repeat: no-repeat;
         height: 160px;
         padding: 20px;
         box-sizing: border-box;
         box-shadow: 0 1px 2px 0 #0000004d;
+
+        h1, h2 {
+            font-weight: 500;
+            color: #0E5422;
+        }
     }
 
     &_saida {
@@ -57,6 +66,11 @@
         padding: 20px;
         box-sizing: border-box;
         box-shadow: 0 1px 2px 0 #0000004d;
+
+        h1, h2 {
+            font-weight: 500;
+            color: #540E0E;
+        }
     }
 
     &_saldo {
@@ -69,10 +83,15 @@
         padding: 20px;
         box-sizing: border-box;
         box-shadow: 0 1px 2px 0 #0000004d;
+
+        h1, h2 {
+            font-weight: 500;
+            color: #383005;
+        }
     }
 
     &_objetivos {
-        grid-area: lista_valores_objetivos;
+        // grid-area: lista_valores_objetivos;
         background-image: url("../../../assets/images/objetivos.png");
         background-size: cover;
         background-position: center;
