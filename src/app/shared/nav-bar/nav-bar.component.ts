@@ -19,7 +19,7 @@ export class NavBarComponent {
 
   signOut() {
     this.authService.signOut().then(() => {
-      this.router.navigate(['/login']);
+      location.href = '/login'
     });
   }
 

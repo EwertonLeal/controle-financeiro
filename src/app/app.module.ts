@@ -12,6 +12,9 @@ import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 import { MaterialModule } from './shared/material/material.module';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { monthYearReducer } from './state/month-year/month-year.reducer';
 
 @NgModule({
   declarations: [
@@ -26,7 +29,8 @@ import { MaterialModule } from './shared/material/material.module';
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireAuthModule,
     AngularFireDatabaseModule,
-    MaterialModule
+    MaterialModule,
+    StoreModule.forRoot({ monthYear: monthYearReducer }),
   ],
   providers: [
   ],
