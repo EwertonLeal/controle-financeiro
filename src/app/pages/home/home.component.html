@@ -2,7 +2,17 @@
 
 <section class="home_container">
     <section class="lista_saidas">
-        <h2>Gráficos</h2>
+        
+        <mat-form-field>
+            <mat-label>Escolha uma opção</mat-label>
+            <mat-select value="entradas" (selectionChange)="changeGraphSelection($event.value)">
+              <mat-option  value="entradas">Grafico de entradas</mat-option>
+              <mat-option value="saídas">Grafico de saídas</mat-option>
+              <mat-option value="comparar">Comparar gastos</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <p-chart type="pie" [data]="basicData" />
     </section>
     <!-- <section class="grafico_gastos"></section> -->
     <section class="lista_valores">

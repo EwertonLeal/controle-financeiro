@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { combineLatest, map, Observable, take, takeUntil, tap } from 'rxjs';
+import { combineLatest, from, map, Observable, take, takeUntil, tap } from 'rxjs';
 import { Transacao } from 'src/app/shared/models/transacao.model';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
-import { AngularFirestore, DocumentChangeAction } from '@angular/fire/compat/firestore';
+import { AngularFirestore, DocumentChangeAction, QuerySnapshot } from '@angular/fire/compat/firestore';
 import { OnDestroyService } from 'src/app/shared/service/onDestroy/on-destroy.service';
 import { v4 as uuidv4 } from 'uuid';
 import { GraphData } from 'src/app/shared/models/graphData.model';
@@ -169,17 +169,40 @@ export class TransactionsService extends OnDestroyService {
         .where('accountId', '==', accountId)
         .where('mes', '==', month)
         .where('ano', '==', year)
-    }).snapshotChanges();
+        .where('ativo', '==', true)
+    });
 
-    return query.pipe(
-      map((change: DocumentChangeAction<unknown>[]) => {
-        return change.map(x => {
-          const docs = x.payload.doc.data() as Transacao;
-          const graphdata: GraphData = { type: docs.tipo_transacao, preco: docs.preco }
-          return graphdata;
+    return from(query.get({ source: 'server' })).pipe(
+      map((snapshot: QuerySnapshot<unknown>) => {
+        return snapshot.docs.map(doc => {
+          const data = doc.data() as Transacao;
+          return { type: data.tipo_transacao, preco: data.preco, category: data.categoria } as GraphData;
         })
       })
     );
+  }
+
+  public getPriceAndStatusOfTransactions(month: number, year: number, accountId: string, type: string): Observable<{ preco: number; status: string }[]> {
+    
+    const query = this.fireStore.collection(this.dbPath, ref => {
+      return ref
+        .where('accountId', '==', accountId)
+        .where('mes', '==', month)
+        .where('ano', '==', year)
+        .where('ativo', '==', true)
+        .where('tipo_transacao', '==', type)
+        .orderBy('data', 'asc');
+    });
+
+    return from(query.get({ source: 'server' })).pipe(
+      map((snapshot: QuerySnapshot<unknown>) => {
+        return snapshot.docs.map(doc => {
+          const data = doc.data() as Transacao;
+          return { preco: data.preco, status: data.status };
+        })
+      })
+    );
+
   }
 
   private getAllFixedTransaction(accountId: string, type: string) {

@@ -14,7 +14,7 @@ export class NavBarComponent {
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    public router: Router
   ) {}
 
   signOut() {

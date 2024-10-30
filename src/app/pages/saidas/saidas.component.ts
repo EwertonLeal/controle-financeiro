@@ -89,13 +89,7 @@ export class SaidasComponent extends OnDestroyService implements OnInit {
         this.totalCount = x;
       });
 
-      this.totalPerMonth = this.todasTransacoes.reduce((acc: number, cur: Transacao) => acc + cur.preco, 0);
-      this.totalConcludedPerMonth = this.todasTransacoes
-        .filter((transacoes) => transacoes.status == 'Concluído')
-        .reduce((acc: number, cur: Transacao) => acc + cur.preco, 0);
-      this.totalPendingPerMonth = this.todasTransacoes
-        .filter((transacoes) => transacoes.status == 'Pendente')
-        .reduce((acc: number, cur: Transacao) => acc + cur.preco, 0);
+      this.getTotalOfMonth()
     });
   }
 
@@ -168,4 +162,20 @@ export class SaidasComponent extends OnDestroyService implements OnInit {
     this.getFinancialIncomeByDate(this.currentYear, this.currentMonth, String(this.user?.id), "saída", this.lastVisibleItem);
 
   }
+
+  getTotalOfMonth() {
+    this._transactionService.getPriceAndStatusOfTransactions(this.currentMonth, this.currentYear, String(this.user?.id), "saída")
+    .pipe(takeUntil(this.destroy$)).subscribe((res: any[]) => {
+      this.totalPerMonth = res.reduce((acc: number, cur: any) => acc + cur.preco, 0);
+      
+      this.totalConcludedPerMonth = res
+        .filter((transacoes) => transacoes.status == 'Concluído')
+        .reduce((acc: number, cur: Transacao) => acc + cur.preco, 0);
+        
+      this.totalPendingPerMonth = res
+        .filter((transacoes) => transacoes.status == 'Pendente')
+        .reduce((acc: number, cur: Transacao) => acc + cur.preco, 0);
+    })
+  }
+
 }

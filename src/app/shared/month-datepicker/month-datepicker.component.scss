@@ -10,6 +10,7 @@
     width: fit-content;
     cursor: pointer;
     transition: .3s ease-in-out;
+    position: relative;
 }
 
 .month_datepicker_container:hover {
@@ -20,10 +21,14 @@ i {
     margin-left: 5px;
 }
 
-::ng-deep mat-form-field {
+::ng-deep .month_datepicker_container mat-form-field {
     opacity: 0 !important;
     pointer-events: none !important;
     position: absolute;
+    top: 0;
+    left: 0;
+    width: 218px;
+    height: 70px;
 }
 
 ::ng-deep  {

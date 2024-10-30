@@ -7,7 +7,7 @@
             <!-- <button routerLink="/objetivos" routerLinkActive="active">Cadastrar objetivos</button> -->
         </nav>
 
-        <month-datepicker></month-datepicker>
+        <month-datepicker [ngClass]="{ 'hidden': router.url != '/home' }"></month-datepicker>
     </div>
 
     <div class="user_container">

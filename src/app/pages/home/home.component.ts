@@ -20,6 +20,7 @@ export class HomeComponent extends OnDestroyService implements OnInit {
   
   currentDate: Date = new Date();
   user:IUser| null = this._authService.user.value;
+  transactions!: GraphData[];
   entradas!: GraphData[];
   saidas!: GraphData[];
   totalEntradas!: number;
@@ -27,6 +28,7 @@ export class HomeComponent extends OnDestroyService implements OnInit {
   total!: number;
   monthAndYear$!: Observable<MonthAndYear | null>;
 
+  basicData: any;
 
   constructor(
     private _transactionService: TransactionsService,
@@ -42,16 +44,87 @@ export class HomeComponent extends OnDestroyService implements OnInit {
     this.monthAndYear$.pipe(takeUntil(this.destroy$)).subscribe((monthAndYear: MonthAndYear | null) => {
       
       if(monthAndYear == null) {
+        this.transactions = this.route.snapshot.data['graphData'];
         this.setSumOfTransactions(this.route.snapshot.data['graphData']);
         return;
       }
 
       this._transactionService.getAllTransactionsOfAccountByDate(monthAndYear.month, monthAndYear.year, String(this.user?.id))
-      .pipe(take(1)).subscribe((graphData: GraphData[]) => {
-        this.setSumOfTransactions(graphData);
+      .pipe(takeUntil(this.destroy$)).subscribe((graphData: GraphData[]) => {
+        this.transactions = graphData;
+        this.setSumOfTransactions(this.transactions);
       })
 
     });
+
+    this.setDataInGraph(this.entradas);
+  }
+
+  changeGraphSelection(eventValue: string) {
+    switch (eventValue) {
+      case 'saídas':
+          this.setDataInGraph(this.saidas);
+        break;
+
+      case 'comparar':
+          this.compareDataByType(this.transactions);
+        break;
+    
+      default:
+          this.setDataInGraph(this.entradas);
+        break;
+    }
+  }
+
+  private setDataInGraph(dataSource: GraphData[]) {
+
+    const aggregatedData = Object.values(dataSource.reduce((acc, curr) => {
+      const key = curr.category;
+  
+      if (!acc[key]) {
+          acc[key] = { ...curr };
+      } else {
+          acc[key].preco += curr.preco;
+      }
+  
+      return acc;
+    }, {} as Record<string, GraphData>));
+
+    this.basicData = {
+      labels: [...aggregatedData.map(data => data.category)],
+      datasets: [
+          {
+              data: [...aggregatedData.map(data => data.preco)],
+              borderWidth: 1
+          }
+      ]
+    };
+  }
+
+  private compareDataByType(dataSource: GraphData[]) {
+
+    const aggregatedData = Object.values(dataSource.reduce((acc, curr) => {
+      const key = curr.type;
+  
+      if (!acc[key]) {
+          acc[key] = { ...curr };
+      } else {
+          acc[key].preco += curr.preco;
+      }
+  
+      return acc;
+    }, {} as Record<string, GraphData>));
+
+    this.basicData = {
+      labels: [...aggregatedData.map(data => data.type)],
+      datasets: [
+          {
+              data: [...aggregatedData.map(data => data.preco)],
+              borderWidth: 1
+          }
+      ]
+    };
+
   }
 
   private setSumOfTransactions(graphData: GraphData[]) {
@@ -63,5 +136,4 @@ export class HomeComponent extends OnDestroyService implements OnInit {
 
     this.total = this.totalEntradas - this.totalSaidas;
   }
-
 }
