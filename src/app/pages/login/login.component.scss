@@ -69,3 +69,20 @@
         color: #1f7cd3;
     }
 }
+
+
+@media (max-width: 425px) {
+    .login_form-wraper {
+        min-width: initial;
+        max-width: 600px;
+        grid-template:
+        "login_title login_title"
+        "form_container form_container"
+        "signUp_cta signUp_cta"
+        ;
+    }
+
+    .image_container {
+        display: none;
+    }
+}

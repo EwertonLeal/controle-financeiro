@@ -64,6 +64,13 @@
     grid-area: email_field;
 }
 
+.password_field {
+    grid-area: password_field;
+}
+
+.confirm_password_field {
+    grid-area: confirm_password_field;
+}
 
 .btn_create {
     grid-area: btn_create;
@@ -82,5 +89,21 @@
 
     a:hover {
         color: #1f7cd3;
+    }
+}
+
+@media (max-width: 425px) {
+    .signUp_form-wraper {
+        min-width: initial;
+        width: 90% !important;
+    }
+
+    .form_container {
+        grid-template: 
+        "name_field name_field"
+        "email_field email_field"
+        "password_field password_field"
+        "confirm_password_field confirm_password_field"
+        "btn_create btn_create";
     }
 }
