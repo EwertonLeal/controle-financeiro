@@ -48,28 +48,30 @@
     ></transacao-datepicker>
 
     <div class="saidas_table">
-      <table *ngIf="todasTransacoes.length > 0; else noOneTransactionInThisMonth">
-        <tr>
-          <th>Status</th>
-          <th>Data</th>
-          <th>Preço</th>
-          <th>Descrição</th>
-          <th>Categoria</th>
-          <th class="botoes_acao">Ações</th>
-        </tr>
-
-        <tr *ngFor="let transacao of todasTransacoes">
-          <td>{{ transacao.status }}</td>
-          <td>{{ transacao.data | date : 'dd/MM/yyyy' }}</td>
-          <td>{{ transacao.preco | currency: 'BRL' }}</td>
-          <td>{{ transacao.descricao }}</td>
-          <td>{{ transacao.categoria }}</td>
-          <td class="botoes_acao">
-            <i class="fas fa-pen" title="Editar transação" (click)="editTransaction(transacao)"></i>
-            <i class="fas fa-trash-alt" title="Remover transação" (click)="removeTransaction(transacao)"></i>
-          </td>
-        </tr>
-      </table>
+      <div class="saidas_table_container">
+        <table *ngIf="todasTransacoes.length > 0; else noOneTransactionInThisMonth">
+          <tr>
+            <th>Status</th>
+            <th>Data</th>
+            <th>Preço</th>
+            <th>Descrição</th>
+            <th>Categoria</th>
+            <th class="botoes_acao">Ações</th>
+          </tr>
+  
+          <tr *ngFor="let transacao of todasTransacoes">
+            <td>{{ transacao.status }}</td>
+            <td>{{ transacao.data | date : 'dd/MM/yyyy' }}</td>
+            <td>{{ transacao.preco | currency: 'BRL' }}</td>
+            <td>{{ transacao.descricao }}</td>
+            <td>{{ transacao.categoria }}</td>
+            <td class="botoes_acao">
+              <i class="fas fa-pen" title="Editar transação" (click)="editTransaction(transacao)"></i>
+              <i class="fas fa-trash-alt" title="Remover transação" (click)="removeTransaction(transacao)"></i>
+            </td>
+          </tr>
+        </table>
+      </div>
 
       <ng-template #noOneTransactionInThisMonth>
         <div class="noTransaction-container">

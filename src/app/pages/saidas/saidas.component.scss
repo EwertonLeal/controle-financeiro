@@ -138,3 +138,33 @@ button:hover, button.active {
         }
     }
 }
+
+@media (max-width: 992px) {
+    .saldo_container {
+        display: block;
+        margin-bottom: 2rem;
+        text-align: end;
+    }
+
+    .saldo_card_row {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .total_container {
+        margin: 0 !important;
+
+        &_text {
+            text-align: start; 
+        }
+    }
+
+    .total_container:last-child {
+        margin-bottom: 2rem !important;
+    }
+
+    .saidas_table_container {
+        overflow-x: auto;
+        position: relative; 
+    }
+}

@@ -89,7 +89,7 @@ button:hover, button.active {
 
     .mobile_header {
         display: flex;
-        width: 90%;
+        width: calc(100% - 45px) !important;
         height: 60px;
         background-color: #1f7cd3;
         color: #fff;
