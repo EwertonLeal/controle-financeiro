@@ -62,3 +62,59 @@ button:hover, button.active {
 .hidden {
     display: none;
 }
+
+.mobile_datepicker, .mobile_header {
+    display: none;
+}
+
+.fa-arrow-up {
+    color: #008000;
+}
+
+.fa-arrow-down {
+    color: #800000;
+}
+
+@media (max-width: 992px) {
+    .navbar_container month-datepicker, header {
+        display: none;
+    }
+
+    .mobile_datepicker {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        margin: 4rem auto 1.5rem;
+    }
+
+    .mobile_header {
+        display: flex;
+        width: 90%;
+        height: 60px;
+        background-color: #1f7cd3;
+        color: #fff;
+        position: fixed;
+        top: 0;
+        left: 0px;
+        padding: 0 20px;
+        z-index: 999;
+    }
+
+    button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        width: 40px;
+        height: 40px;
+        border-radius: 100%;
+        color: #1a1a1a !important;
+    }
+
+    button:hover, button.active {
+        background-color: #fff;
+        font-size: 20px;
+        color: #1f7cd3 !important;
+    }
+
+}

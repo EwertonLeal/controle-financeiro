@@ -18,3 +18,14 @@
         <button class="button_outline" (click)="signOut()">Sair</button>
     </div>
 </header>
+
+<header class="mobile_header">
+    <button routerLink="/home" routerLinkActive="active"><i class="fas fa-home"></i></button>
+    <button routerLink="/entradas" routerLinkActive="active"><i class="fas fa-arrow-up"></i></button>
+    <button routerLink="/saidas" routerLinkActive="active"><i class="fas fa-arrow-down"></i></button>
+    <button class="button_outline" (click)="signOut()"><i class="fas fa-sign-out-alt"></i></button>
+</header>
+
+<div class="mobile_datepicker">
+    <month-datepicker [ngClass]="{ 'hidden': router.url != '/home' }"></month-datepicker>
+</div>
