@@ -17,7 +17,7 @@
         <input type="email" matInput formControlName="emailFormControl" [errorStateMatcher]="matcher"
                placeholder="Ex. pat@example.com">
         <mat-error *ngIf="loginForm.get('emailFormControl')?.hasError('email') && !loginForm.get('emailFormControl')?.hasError('required')">
-          Digite um e-mail válidos!
+          Digite um e-mail válido
         </mat-error>
         <mat-error *ngIf="loginForm.get('emailFormControl')?.hasError('required')">
           Email é <strong>obrigatorio</strong>
@@ -32,7 +32,7 @@
         </mat-error>
       </mat-form-field>
 
-        <button (click)="login($event)">ACESSAR MINHA CONTA</button>
+        <button [disabled]="!loginForm.valid" (click)="login()">ACESSAR MINHA CONTA</button>
     </form>
 
     <p class="signUp_cta">Ainda não tem uma conta ? <a routerLink="/cadastro">Cadastre-se</a></p>

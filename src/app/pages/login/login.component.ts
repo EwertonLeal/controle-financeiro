@@ -33,9 +33,7 @@ export class LoginComponent {
     });
   }
 
-  login(event: any) {
-    event.preventDefault();
-
+  login() {
     if (this.loginForm.valid) {
       const email: string = this.loginForm.get('emailFormControl')?.value;
       const password: string = this.loginForm.get('passwordFormControl')?.value;
@@ -43,8 +41,6 @@ export class LoginComponent {
       this.authService.signIn(email, password).then(() => {
         this.router.navigate(['/home']);
       });
-
     }
   }
-
 }
