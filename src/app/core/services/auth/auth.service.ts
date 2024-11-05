@@ -15,7 +15,6 @@ export class AuthService {
 
   constructor(
     private auth: AngularFireAuth, 
-    private db: AngularFireDatabase,
     private router: Router,
     private _snackBar: MatSnackBar
   ) {
@@ -32,8 +31,8 @@ export class AuthService {
         id: String(credential.user?.uid),
         displayName: String(credential.user?.providerData[0]?.displayName),
         email: String(credential.user?.providerData[0]?.email),
-        phoneNumber: String(credential.user?.providerData[0]?.phoneNumber),
-        photoUrl: String(credential.user?.providerData[0]?.photoURL),
+        phoneNumber: credential.user?.providerData[0]?.phoneNumber ? String(credential.user?.providerData[0]?.phoneNumber) : null,
+        photoUrl:  credential.user?.providerData[0]?.photoURL ? String(credential.user?.providerData[0]?.photoURL) : null,
       };
     
       sessionStorage.setItem('user', JSON.stringify(user));
@@ -85,7 +84,7 @@ export class AuthService {
     }
   }
 
-  openSnackBar(message: string, action: string, duration: number, panelType: string) {
+  private openSnackBar(message: string, action: string, duration: number, panelType: string) {
     this._snackBar.open(message, action, {
       duration: duration,
       verticalPosition: 'top',

@@ -12,7 +12,7 @@ import { By } from '@angular/platform-browser';
 import { MatError } from '@angular/material/form-field';
 import { Router } from '@angular/router';
 
-fdescribe('#SignUpComponent Testing methods', () => {
+describe('#SignUpComponent Testing methods', () => {
   let component: SignUpComponent;
   let fixture: ComponentFixture<SignUpComponent>;
   let mockAuthSvc: jasmine.SpyObj<AuthService>;

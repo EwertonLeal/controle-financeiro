@@ -16,7 +16,7 @@ import { HomeComponent } from '../home/home.component';
 import { SignUpComponent } from '../sign-up/sign-up.component';
 
 
-fdescribe('#LoginComponent testing methods', () => {
+describe('#LoginComponent testing methods', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
   let mockAuthSvc: jasmine.SpyObj<AuthService>;
