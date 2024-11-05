@@ -35,18 +35,7 @@ export class SignUpComponent implements OnInit {
     });
   }
 
-  matchPasswordValidator(control: AbstractControl) {
-    if (!this.signUpForm) {
-      return null;
-    }
-    const password = this.signUpForm.get('passwordFormControl')?.value;
-    const confirmPassword = control.value;
-    return password === confirmPassword ? null : { mismatch: true };
-  };
-
-  signUp(event: any) {
-    event.preventDefault();
-
+  signUp() {
     if (this.signUpForm.valid) {
       const name: string = this.signUpForm.get('nameFormControl')?.value;
       const email: string = this.signUpForm.get('emailFormControl')?.value;
@@ -54,9 +43,14 @@ export class SignUpComponent implements OnInit {
 
       this.auth.signUp(name, email, password);
     }
-
-
   }
 
-
+  private matchPasswordValidator(control: AbstractControl) {
+    if (!this.signUpForm) {
+      return null;
+    }
+    const password = this.signUpForm.get('passwordFormControl')?.value;
+    const confirmPassword = control.value;
+    return password === confirmPassword ? null : { mismatch: true };
+  };
 }
